@@ -1,707 +1,764 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LI Restore — Mobile Wellness Services | Long Island, NY</title>
-<meta name="description" content="Long Island's premium mobile wellness service. Massage therapy, personal training, stretch therapy, lifestyle coaching, facials, mobile spa and more — delivered to your home, office, or Hamptons residence.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LIRestore — Pollinator stewardship for Long Island's East End</title>
+<meta name="description" content="Managed apiaries, native habitat restoration, and ecological measurement for estates, vineyards, resorts, and workplaces across Suffolk County.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://js.stripe.com/v3/"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..800,0..100,0..1&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #0e1a14; --cream: #f5f0e8; --sage: #6b8f71;
-    --sage-light: #a8c5aa; --sage-dark: #3d5c42; --gold: #b8922a;
-    --gold-light: #e8c96a; --white: #fdfcf9; --muted: #7a7269;
-    --border: rgba(14,26,20,0.12);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--ink); overflow-x: hidden; }
+/* ============ TOKENS ============ */
+:root{
+  --ink:#1B2420;        /* pine shadow, near-black desaturated green */
+  --pine:#2F4A3C;       /* pitch pine */
+  --brack:#5C7A73;      /* brackish teal-grey */
+  --sand:#D6CFC0;       /* glacial outwash */
+  --paper:#E8E6DF;      /* pale lichen grey */
+  --pollen:#C9A227;     /* muted ochre — the only warm note, used sparingly */
 
-  /* NAV */
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(253,252,249,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
-  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; letter-spacing: 0.04em; color: var(--sage-dark); text-decoration: none; }
-  .nav-logo span { color: var(--gold); }
-  .nav-links { display: flex; gap: 32px; align-items: center; }
-  .nav-links a { font-size: 13px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink); text-decoration: none; opacity: 0.65; transition: opacity 0.2s; }
-  .nav-links a:hover { opacity: 1; }
-  .nav-cta { background: var(--sage-dark) !important; color: var(--white) !important; padding: 10px 22px; border-radius: 2px; opacity: 1 !important; }
+  --display:"Fraunces",Georgia,serif;
+  --body:"Archivo",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
 
-  /* HERO */
-  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 80px; }
-  .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 80px 60px 80px 80px; background: var(--cream); position: relative; }
-  .hero-left::after { content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 1px; background: linear-gradient(to bottom, transparent, var(--border) 20%, var(--border) 80%, transparent); }
-  .eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-  .eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--gold); }
-  .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 5.2vw, 76px); font-weight: 300; line-height: 1.06; color: var(--ink); margin-bottom: 24px; }
-  .hero h1 em { font-style: italic; color: var(--sage-dark); }
-  .hero-sub { font-size: 15px; line-height: 1.75; color: var(--muted); max-width: 430px; margin-bottom: 36px; font-weight: 300; }
-  .hero-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 36px; }
-  .pill { padding: 5px 13px; background: var(--white); border: 1px solid var(--border); font-size: 11px; color: var(--muted); border-radius: 20px; }
-  .pill.hi { background: var(--sage-dark); color: var(--white); border-color: var(--sage-dark); }
-  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
-  .btn { display: inline-block; text-decoration: none; cursor: pointer; font-family: 'DM Sans', sans-serif; border-radius: 2px; transition: all 0.25s; letter-spacing: 0.06em; text-transform: uppercase; font-size: 13px; font-weight: 500; border: none; }
-  .btn-p { background: var(--sage-dark); color: var(--white); padding: 15px 34px; }
-  .btn-p:hover { background: var(--sage); transform: translateY(-1px); }
-  .btn-g { background: transparent; color: var(--ink); padding: 14px 30px; border: 1px solid var(--border); }
-  .btn-g:hover { border-color: var(--ink); }
+  --gut:clamp(20px,5vw,72px);
+  --maxw:1240px;
+  --rule:rgba(27,36,32,.16);
+}
 
-  .hero-right { background: linear-gradient(135deg, rgba(107,143,113,0.08) 0%, rgba(184,146,42,0.05) 100%); display: flex; align-items: center; justify-content: center; padding: 60px 40px; position: relative; overflow: hidden; }
-  .hero-right::before { content: ''; position: absolute; inset: 0; opacity: 0.04; background-image: radial-gradient(circle at 25% 40%, var(--sage) 1.5px, transparent 1.5px), radial-gradient(circle at 75% 65%, var(--sage) 1px, transparent 1px); background-size: 52px 52px, 36px 36px; }
-  .svc-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; max-width: 460px; position: relative; z-index: 1; }
-  .sc { background: var(--white); padding: 20px 18px; border-left: 3px solid var(--sage); box-shadow: 0 4px 20px rgba(14,26,20,0.07); cursor: pointer; transition: transform 0.25s; }
-  .sc:hover { transform: translateY(-3px); }
-  .sc.gd { border-color: var(--gold); }
-  .sc-icon { font-size: 20px; margin-bottom: 6px; }
-  .sc-name { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 1px; }
-  .sc-price { font-size: 11px; color: var(--sage-dark); }
-  .sc.span2 { grid-column: span 2; background: var(--sage-dark); border-color: var(--sage-dark); cursor: pointer; }
-  .sc.span2 .sc-name { color: var(--white); font-size: 13px; }
-  .sc.span2 .sc-price { color: var(--gold-light); }
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:clamp(15px,1.02vw,17px);line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--pollen);outline-offset:3px}
 
-  /* TRUST */
-  .trust { background: var(--sage-dark); padding: 16px 80px; display: flex; align-items: center; justify-content: center; gap: 44px; flex-wrap: wrap; }
-  .ti { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 400; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.7); }
+/* ============ TYPE ============ */
+.eyebrow{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--brack);margin:0 0 1.4rem;display:flex;gap:.7em;align-items:center;flex-wrap:wrap;
+}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--pollen);flex:none}
+h1,h2,h3{font-family:var(--display);font-weight:500;margin:0;letter-spacing:-.018em;
+  font-variation-settings:"SOFT" 40,"WONK" 1}
+h1{font-size:clamp(2.5rem,6.2vw,4.9rem);line-height:.97;font-weight:400}
+h2{font-size:clamp(1.85rem,3.5vw,3rem);line-height:1.04}
+h3{font-size:clamp(1.15rem,1.7vw,1.5rem);line-height:1.16}
+.lede{font-size:clamp(1.05rem,1.35vw,1.3rem);line-height:1.5;max-width:44ch}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 
-  /* SECTIONS */
-  section { padding: 90px 80px; }
-  .sh { text-align: center; margin-bottom: 60px; }
-  .sey { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
-  .sey::before, .sey::after { content: ''; width: 28px; height: 1px; background: var(--gold); }
-  .st { font-family: 'Cormorant Garamond', serif; font-size: clamp(32px, 3.8vw, 52px); font-weight: 300; line-height: 1.1; color: var(--ink); }
-  .st em { font-style: italic; color: var(--sage-dark); }
-  .ss { font-size: 15px; color: var(--muted); max-width: 500px; margin: 12px auto 0; line-height: 1.72; font-weight: 300; }
+/* ============ SHELL ============ */
+.wrap{max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
+.band{padding-block:clamp(56px,7vw,104px);position:relative}
+.band--dark{background:var(--ink);color:var(--paper);--rule:rgba(232,230,223,.2)}
+.band--dark .eyebrow{color:var(--sand)}
+.band--sand{background:var(--sand)}
 
-  /* SERVICES */
-  #services { background: var(--white); }
-  .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 44px; overflow-x: auto; }
-  .tb { padding: 11px 20px; background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; color: var(--muted); white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
-  .tb:hover { color: var(--ink); }
-  .tb.on { color: var(--sage-dark); font-weight: 500; border-bottom-color: var(--sage-dark); }
-  .tp { display: none; }
-  .tp.on { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+/* stratum divider: a survey rule with a depth annotation */
+.stratum{border-top:1px solid var(--rule);position:relative}
+.stratum__label{
+  font-family:var(--mono);font-size:.63rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--brack);position:absolute;top:-.62em;left:var(--gut);
+  background:var(--paper);padding-right:.9em;
+}
+.band--sand .stratum__label{background:var(--sand)}
 
-  .sc2 { padding: 36px 28px; background: var(--white); border: 1px solid var(--border); position: relative; cursor: pointer; overflow: hidden; transition: all 0.28s; }
-  .sc2::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--sage), var(--sage-light)); transform: scaleX(0); transform-origin: left; transition: transform 0.28s; }
-  .sc2:hover { background: var(--cream); transform: translateY(-3px); box-shadow: 0 8px 28px rgba(14,26,20,0.07); }
-  .sc2:hover::after { transform: scaleX(1); }
-  .si { font-size: 30px; margin-bottom: 14px; }
-  .sn { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 8px; color: var(--ink); }
-  .sd { font-size: 13px; line-height: 1.7; color: var(--muted); margin-bottom: 18px; font-weight: 300; }
-  .sp { font-size: 12px; font-weight: 500; color: var(--sage-dark); border-top: 1px solid var(--border); padding-top: 12px; }
-  .stag { position: absolute; top: 14px; right: 14px; background: var(--gold); color: var(--white); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
-  .feat { grid-column: span 3; background: var(--sage-dark); display: flex; gap: 36px; align-items: center; }
-  .feat .sn { color: var(--white); font-size: 28px; }
-  .feat .sd { color: rgba(255,255,255,0.72); }
-  .feat .sp { color: var(--gold-light); border-color: rgba(255,255,255,0.15); }
-  .feat:hover { background: var(--sage); }
-  .fpb { background: var(--gold); padding: 18px 24px; text-align: center; border-radius: 2px; flex-shrink: 0; }
-  .fpb-a { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; color: white; line-height: 1; }
-  .fpb-l { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.8); margin-top: 3px; }
+/* ============ NAV ============ */
+.nav{
+  position:sticky;top:0;z-index:50;background:rgba(232,230,223,.93);
+  backdrop-filter:blur(9px);border-bottom:1px solid var(--rule);
+}
+.nav__in{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;
+  padding-block:.85rem;max-width:var(--maxw);margin:0 auto;padding-inline:var(--gut)}
+.mark{font-family:var(--mono);font-size:.83rem;letter-spacing:.22em;font-weight:500;text-decoration:none}
+.mark span{color:var(--pollen)}
+.nav__links{display:flex;gap:1.6rem;align-items:center;
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.nav__links a{text-decoration:none;color:var(--brack);padding-block:.3rem}
+.nav__links a:hover{color:var(--ink)}
+@media(max-width:760px){.nav__links a:not(.btn){display:none}}
 
-  /* HOW */
-  #how { background: var(--cream); }
-  .steps { display: grid; grid-template-columns: repeat(4, 1fr); }
-  .step { padding: 36px 24px; border-right: 1px solid var(--border); }
-  .step:last-child { border-right: none; }
-  .stepn { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 300; color: var(--sage-light); opacity: 0.4; line-height: 1; margin-bottom: 14px; }
-  .stepico { font-size: 24px; margin-bottom: 10px; }
-  .stepttl { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; margin-bottom: 7px; }
-  .stepdsc { font-size: 13px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex;align-items:center;gap:.6em;text-decoration:none;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  padding:.72em 1.15em;border:1px solid var(--ink);color:var(--ink);background:none;
+  transition:background .18s,color .18s;
+}
+.btn:hover{background:var(--ink);color:var(--paper)}
+.btn--solid{background:var(--ink);color:var(--paper)}
+.btn--solid:hover{background:var(--pine);border-color:var(--pine)}
+.btn--light{border-color:var(--paper);color:var(--paper)}
+.btn--light:hover{background:var(--paper);color:var(--ink)}
+.btn__arrow{transition:transform .18s}
+.btn:hover .btn__arrow{transform:translateX(3px)}
 
-  /* BOOKING */
-  #book { background: var(--white); }
-  .bwrap { max-width: 980px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.15fr; gap: 52px; align-items: start; }
-  .binfo h3 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 12px; }
-  .binfo p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; font-weight: 300; }
-  .bf { display: flex; gap: 11px; align-items: flex-start; margin-bottom: 16px; }
-  .bfico { width: 32px; height: 32px; background: var(--sage-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-  .bftxt strong { display: block; font-size: 13px; font-weight: 500; margin-bottom: 1px; }
-  .bftxt span { font-size: 12px; color: var(--muted); }
+/* ============ HERO ============ */
+.hero{padding-block:clamp(48px,6.5vw,92px) clamp(40px,5vw,72px)}
+.hero__grid{display:grid;grid-template-columns:1.06fr .94fr;gap:clamp(28px,4.5vw,72px);align-items:start}
+@media(max-width:900px){.hero__grid{grid-template-columns:1fr}}
+h1 em{font-style:normal;font-variation-settings:"SOFT" 90,"WONK" 1;color:var(--pine)}
+.hero__body{margin-top:1.9rem;max-width:46ch;color:#33403a}
+.hero__cta{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:2.1rem}
+.hero__meta{
+  margin-top:2.6rem;padding-top:1.1rem;border-top:1px solid var(--rule);
+  display:flex;gap:2.4rem;flex-wrap:wrap;font-family:var(--mono);font-size:.7rem;
+  letter-spacing:.06em;color:var(--brack);
+}
+.hero__meta b{display:block;color:var(--ink);font-weight:500;font-size:1.32rem;letter-spacing:-.01em}
 
-  .bform { background: var(--cream); padding: 38px; border: 1px solid var(--border); }
-  .ftitle { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; margin-bottom: 22px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
-  .fprog { display: flex; gap: 6px; margin-bottom: 22px; }
-  .fdot { height: 3px; flex: 1; background: var(--border); border-radius: 2px; transition: background 0.3s; }
-  .fdot.done { background: var(--sage); }
-  .fdot.act { background: var(--gold); }
-  .fstep { display: none; }
-  .fstep.on { display: block; }
-  .fg { margin-bottom: 14px; }
-  .fg label { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-  .fg input, .fg select, .fg textarea { width: 100%; padding: 10px 13px; background: var(--white); border: 1px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--ink); border-radius: 2px; transition: border-color 0.2s; outline: none; }
-  .fg input:focus, .fg select:focus, .fg textarea:focus { border-color: var(--sage); }
-  .frow { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+/* ---- signature: the land in cross-section ---- */
+.section-figure{position:relative}
+.xsec{width:100%;height:auto}
+.xsec text{font-family:var(--mono);font-size:8.4px;letter-spacing:.1em;text-transform:uppercase}
+.xsec .lbl{fill:#5C7A73}
+.xsec .lbl--key{fill:#8a6f12}
+.xsec .lead{stroke:#5C7A73;stroke-width:.6;opacity:.6}
+.xsec figcaption{
+  font-family:var(--mono);font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--brack);margin-top:.9rem;padding-top:.7rem;border-top:1px solid var(--rule);
+}
 
-  /* Form service tabs */
-  .fstabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border); overflow-x: auto; }
-  .fstab { padding: 7px 13px; background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; white-space: nowrap; }
-  .fstab.on { color: var(--sage-dark); border-bottom-color: var(--sage-dark); }
-  .fstp { display: none; }
-  .fstp.on { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-  .sopt { padding: 11px 12px; border: 1px solid var(--border); background: var(--white); cursor: pointer; border-radius: 2px; transition: all 0.18s; text-align: left; }
-  .sopt:hover { border-color: var(--sage); }
-  .sopt.sel { border-color: var(--sage-dark); background: rgba(61,92,66,0.06); }
-  .sopt-n { font-size: 12px; font-weight: 500; color: var(--ink); display: block; margin-bottom: 1px; }
-  .sopt-p { font-size: 11px; color: var(--sage-dark); }
+/* layered reveal */
+.xlayer{opacity:0;transform:translateY(-9px);animation:settle .85s cubic-bezier(.2,.7,.3,1) forwards}
+.xlayer:nth-child(1){animation-delay:.05s}
+.xlayer:nth-child(2){animation-delay:.16s}
+.xlayer:nth-child(3){animation-delay:.27s}
+.xlayer:nth-child(4){animation-delay:.38s}
+.xlayer:nth-child(5){animation-delay:.49s}
+.xlayer:nth-child(6){animation-delay:.60s}
+.xlayer:nth-child(7){animation-delay:.71s}
+.xlayer:nth-child(8){animation-delay:.82s}
+@keyframes settle{to{opacity:1;transform:none}}
+.stem{stroke-dasharray:46;stroke-dashoffset:46;animation:draw 1.1s ease .8s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
 
-  #card-element { padding: 11px 13px; border: 1px solid var(--border); background: var(--white); border-radius: 2px; }
-  #card-element.StripeElement--focus { border-color: var(--sage); }
-  #card-errors { color: #c0392b; font-size: 12px; margin-top: 5px; min-height: 16px; }
-  .fnav { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
-  .bnext { background: var(--sage-dark); color: var(--white); padding: 11px 24px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 2px; transition: all 0.2s; }
-  .bnext:hover { background: var(--sage); }
-  .bback { background: transparent; color: var(--muted); padding: 10px 20px; border: 1px solid var(--border); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 2px; transition: all 0.2s; }
-  .bback:hover { border-color: var(--ink); color: var(--ink); }
-  .bpay { background: var(--gold); color: var(--white); width: 100%; padding: 14px; font-size: 13px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 2px; transition: all 0.2s; margin-top: 12px; }
-  .bpay:hover { background: #9a7a22; transform: translateY(-1px); }
-  .bpay:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-  .obox { background: var(--sage-dark); color: var(--white); padding: 16px; border-radius: 2px; margin-bottom: 14px; }
-  .orow { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 5px; }
-  .orow:last-child { font-weight: 600; border-top: 1px solid rgba(255,255,255,0.18); padding-top: 7px; margin-top: 5px; margin-bottom: 0; }
-  .orow span:first-child { opacity: 0.78; }
-  .bsuccess { text-align: center; padding: 32px 12px; display: none; }
-  .bsuccess .si2 { font-size: 48px; margin-bottom: 12px; }
-  .bsuccess .st2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; margin-bottom: 10px; color: var(--sage-dark); }
-  .bsuccess .ss2 { font-size: 14px; color: var(--muted); line-height: 1.7; }
-  .ferr { color: #c0392b; font-size: 12px; display: none; margin-top: 5px; }
+/* ============ PILLARS ============ */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);margin-top:2.6rem}
+@media(max-width:820px){.pillars{grid-template-columns:1fr}}
+.pillar{background:var(--paper);padding:clamp(20px,2.4vw,32px)}
+.pillar__key{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--pollen);
+  display:flex;align-items:center;gap:.6em;margin-bottom:1.1rem;
+}
+.pillar__key i{width:9px;height:9px;background:var(--pollen);display:block;flex:none}
+.pillar h3{margin-bottom:.55rem}
+.pillar p{margin:0;color:#3c4a44;font-size:.95rem}
 
-  /* TESTIMONIALS */
-  #testimonials { background: var(--ink); }
-  #testimonials .st { color: var(--white); }
-  #testimonials .ss { color: rgba(255,255,255,0.55); }
-  .tgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-  .tc { padding: 30px; border: 1px solid rgba(255,255,255,0.09); position: relative; }
-  .tc::before { content: '\201C'; font-family: 'Cormorant Garamond', serif; font-size: 68px; color: var(--sage); line-height: 0.5; position: absolute; top: 22px; left: 26px; opacity: 0.3; }
-  .tt { font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.75; color: rgba(255,255,255,0.82); font-style: italic; margin-bottom: 18px; }
-  .ta { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage-light); }
-  .tl { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 2px; }
-  .tstar { color: var(--gold); font-size: 12px; margin-bottom: 12px; }
+/* ============ TIERS ============ */
+.tier{
+  display:grid;grid-template-columns:1fr auto;gap:clamp(18px,3vw,48px);
+  align-items:start;padding:clamp(22px,2.7vw,34px) 0 clamp(22px,2.7vw,34px) clamp(18px,2.2vw,30px);
+  border-top:1px solid var(--rule);position:relative;transition:padding-left .22s;
+}
+.tier:last-of-type{border-bottom:1px solid var(--rule)}
+.tier::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;background:var(--brack);
+  width:var(--depth,2px);transition:width .22s,background .22s;
+}
+.tier:hover{padding-left:clamp(24px,2.8vw,40px)}
+.tier:hover::before{background:var(--pollen)}
+@media(max-width:820px){.tier{grid-template-columns:1fr;gap:14px}}
 
-  /* COVERAGE */
-  #coverage { background: var(--cream); }
-  .cgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; }
-  .clist { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-  .ci { padding: 11px 14px; background: var(--white); border-left: 3px solid var(--sage); font-size: 13px; }
-  .ci.prem { border-color: var(--gold); }
-  .ci.prem::after { content: ' \2726'; color: var(--gold); font-size: 9px; }
-  .ch { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; margin-bottom: 14px; }
-  .ccta { margin-top: 36px; padding: 22px 26px; background: var(--white); border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
-  .ccta strong { display: block; font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; margin-bottom: 2px; }
-  .ccta span { font-size: 13px; color: var(--muted); }
+.tier__for{font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--brack);margin:0 0 .5rem}
+.tier__name{margin-bottom:.7rem}
+.tier__desc{margin:0 0 1.15rem;max-width:52ch;color:#3c4a44;font-size:.96rem}
+.tier__inc{margin:0;padding:0;list-style:none;display:grid;gap:.32rem;max-width:56ch}
+.tier__inc li{position:relative;padding-left:1.15em;font-size:.9rem;color:#3c4a44}
+.tier__inc li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:1px;background:var(--brack)}
 
-  /* FOOTER */
-  footer { background: var(--ink); color: rgba(255,255,255,0.65); padding: 52px 80px 26px; }
-  .fg2 { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 44px; margin-bottom: 40px; }
-  .fbrand { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--white); margin-bottom: 11px; }
-  .fbrand span { color: var(--gold); }
-  .fdesc { font-size: 13px; line-height: 1.7; max-width: 250px; font-weight: 300; }
-  .fcol h4 { font-size: 10px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); margin-bottom: 14px; }
-  .flinks { list-style: none; }
-  .flinks li { margin-bottom: 7px; }
-  .flinks a { font-size: 13px; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }
-  .flinks a:hover { color: var(--white); }
-  .fbot { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 22px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: rgba(255,255,255,0.3); flex-wrap: wrap; gap: 9px; }
+.tier__price{text-align:right;min-width:min(230px,52vw)}
+@media(max-width:820px){.tier__price{text-align:left}}
+.tier__fig{font-family:var(--mono);font-size:clamp(1.35rem,2vw,1.75rem);font-weight:500;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;display:block;line-height:1.15}
+.tier__per{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--brack);display:block;margin-top:.3rem}
+.tier__setup{font-family:var(--mono);font-size:.68rem;color:var(--brack);
+  margin-top:.85rem;padding-top:.7rem;border-top:1px solid var(--rule)}
 
-  /* ANIMATIONS */
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  .fu { animation: fadeUp 0.65s ease forwards; }
-  .d1 { animation-delay: 0.08s; opacity: 0; } .d2 { animation-delay: 0.22s; opacity: 0; }
-  .d3 { animation-delay: 0.36s; opacity: 0; } .d4 { animation-delay: 0.5s; opacity: 0; }
+/* scope pips — which pillars a tier includes */
+.scope{display:flex;gap:.42rem;margin-top:1rem;justify-content:flex-end}
+@media(max-width:820px){.scope{justify-content:flex-start}}
+.pip{width:22px;height:22px;border:1px solid var(--rule);display:grid;place-items:center;
+  font-family:var(--mono);font-size:.6rem;color:var(--brack)}
+.pip--on{background:var(--pine);border-color:var(--pine);color:var(--sand)}
+.pip--part{background:linear-gradient(135deg,var(--pine) 50%,transparent 50%);border-color:var(--pine);color:var(--paper)}
 
-  /* RESPONSIVE */
-  @media (max-width: 900px) {
-    nav { padding: 14px 20px; }
-    .nav-links { display: none; }
-    .hero { grid-template-columns: 1fr; }
-    .hero-right { display: none; }
-    .hero-left { padding: 52px 20px; }
-    section { padding: 52px 20px; }
-    .tp.on { grid-template-columns: 1fr; }
-    .feat { grid-column: span 1; flex-direction: column; }
-    .steps { grid-template-columns: 1fr 1fr; }
-    .bwrap { grid-template-columns: 1fr; }
-    .tgrid { grid-template-columns: 1fr; }
-    .cgrid { grid-template-columns: 1fr; gap: 28px; }
-    .fg2 { grid-template-columns: 1fr 1fr; gap: 24px; }
-    footer { padding: 36px 20px 18px; }
-    .trust { padding: 14px 20px; gap: 18px; }
-    .fbot { flex-direction: column; text-align: center; }
-  }
-  .sticky-cta { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 99; background: var(--sage-dark); padding: 13px 18px; flex-direction: column; gap: 3px; }
-  @media (max-width: 600px) { .sticky-cta { display: flex; } }
-  .sticky-btn { background: var(--gold); color: var(--white); border: none; padding: 11px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 2px; cursor: pointer; }
+/* the terminal tier gets the one dark treatment */
+.tier--deep{background:var(--pine);color:var(--paper);--rule:rgba(232,230,223,.26);
+  padding-inline:clamp(18px,2.2vw,30px);margin-top:0}
+.tier--deep::before{background:var(--pollen);width:8px}
+.tier--deep .tier__for,.tier--deep .tier__per,.tier--deep .tier__setup{color:var(--sand)}
+.tier--deep .tier__desc,.tier--deep .tier__inc li{color:#d8e0da}
+.tier--deep .tier__inc li::before{background:var(--pollen)}
+.tier--deep .pip{border-color:rgba(232,230,223,.4);color:var(--sand)}
+.tier--deep .pip--on{background:var(--pollen);border-color:var(--pollen);color:var(--ink)}
+.tier--deep:hover::before{background:var(--paper)}
+
+.scope-legend{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;color:var(--brack);
+  margin-top:1.8rem;display:flex;gap:1.5rem;flex-wrap:wrap}
+.scope-legend b{color:var(--ink);font-weight:500}
+
+/* ============ PROJECT TABLE ============ */
+.ptab{width:100%;border-collapse:collapse;margin-top:2.4rem}
+.ptab th{
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--brack);text-align:left;font-weight:500;padding:0 1rem .7rem 0;
+  border-bottom:1px solid var(--rule);
+}
+.ptab th:last-child,.ptab td:last-child{text-align:right;padding-right:0}
+.ptab td{padding:.85rem 1rem .85rem 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.ptab tr:hover td{background:rgba(92,122,115,.07)}
+.ptab .svc{font-weight:500}
+.ptab .note{display:block;font-size:.83rem;color:var(--brack);margin-top:.18rem}
+.ptab .amt{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.93rem}
+
+/* ============ LIMITS (the risk) ============ */
+.limits__grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(28px,4vw,64px);align-items:start}
+@media(max-width:900px){.limits__grid{grid-template-columns:1fr}}
+.limit{border-top:1px solid var(--rule);padding:1.35rem 0}
+.limit:last-child{border-bottom:1px solid var(--rule)}
+.limit h3{font-size:clamp(1.05rem,1.5vw,1.28rem);margin-bottom:.4rem}
+.limit p{margin:0;color:#c3cdc6;font-size:.94rem;max-width:58ch}
+.limits__note{font-family:var(--mono);font-size:.72rem;line-height:1.7;color:var(--sand);
+  border-left:2px solid var(--pollen);padding-left:1.1rem;margin-top:2rem}
+
+/* ============ CTA + FOOTER ============ */
+.cta{display:grid;grid-template-columns:1fr auto;gap:clamp(24px,4vw,56px);align-items:end}
+@media(max-width:820px){.cta{grid-template-columns:1fr;align-items:start}}
+.cta p{max-width:40ch;margin:1.2rem 0 0;color:#3c4a44}
+.foot{border-top:1px solid var(--rule);padding-block:2.2rem;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--brack)}
+.foot__in{display:flex;justify-content:space-between;gap:1.4rem;flex-wrap:wrap}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--ink)}
+
+/* ============ SCROLL REVEAL ============ */
+.rise{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.3,1)}
+.rise.in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rise{opacity:1;transform:none}
+  .xlayer{opacity:1;transform:none}
+  .stem{stroke-dashoffset:0}
+}
 </style>
 </head>
 <body>
 
-<nav id="nav">
-  <a href="#" class="nav-logo">LI <span>Restore</span></a>
-  <div class="nav-links">
-    <a href="#services">Services</a>
-    <a href="#how">How It Works</a>
-    <a href="#coverage">Service Area</a>
-    <a href="#testimonials">Reviews</a>
-    <a href="#book" class="nav-cta btn">Book Now</a>
+<!-- ============ NAV ============ -->
+<nav class="nav">
+  <div class="nav__in">
+    <a class="mark" href="#top">LI<span>·</span>RESTORE</a>
+    <div class="nav__links">
+      <a href="#method">Method</a>
+      <a href="#programs">Programs</a>
+      <a href="#project">Project work</a>
+      <a href="#limits">Our limits</a>
+      <a class="btn" href="#assess">Request an assessment <span class="btn__arrow">→</span></a>
+    </div>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-left">
-    <div class="eyebrow fu">Long Island's Mobile Wellness Studio</div>
-    <h1 class="fu d1">Your wellness,<br><em>at your door.</em></h1>
-    <p class="hero-sub fu d2">Massage therapy, personal training, stretch therapy, lifestyle coaching, facials, and full mobile spa — brought directly to your Long Island home, office, or Hamptons residence by licensed professionals.</p>
-    <div class="hero-pills fu d3">
-      <span class="pill hi">Massage Therapy</span>
-      <span class="pill hi">Personal Training</span>
-      <span class="pill">Stretch Therapy</span>
-      <span class="pill">Lifestyle Coaching</span>
-      <span class="pill">Facials & Beauty</span>
-      <span class="pill">Mobile Spa</span>
-      <span class="pill">Personal Care</span>
-    </div>
-    <div class="hero-btns fu d4">
-      <a href="#book" class="btn btn-p">Book a Session</a>
-      <a href="#services" class="btn btn-g">Explore Services</a>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="svc-showcase fu d2">
-      <div class="sc" onclick="openBook('Swedish Massage')"><div class="sc-icon">🌿</div><div class="sc-name">Massage Therapy</div><div class="sc-price">From $130</div></div>
-      <div class="sc gd" onclick="openBook('Personal Training')"><div class="sc-icon">💪</div><div class="sc-name">Personal Training</div><div class="sc-price">From $110</div></div>
-      <div class="sc" onclick="openBook('Assisted Stretching')"><div class="sc-icon">🧘</div><div class="sc-name">Stretch Therapy</div><div class="sc-price">From $95</div></div>
-      <div class="sc gd" onclick="openBook('Mobile Facial')"><div class="sc-icon">✨</div><div class="sc-name">Facials & Beauty</div><div class="sc-price">From $85</div></div>
-      <div class="sc" onclick="openBook('Lifestyle Coaching')"><div class="sc-icon">🌟</div><div class="sc-name">Lifestyle Coaching</div><div class="sc-price">From $100</div></div>
-      <div class="sc gd" onclick="openBook('Mobile Manicure & Pedicure')"><div class="sc-icon">💅</div><div class="sc-name">Personal Care</div><div class="sc-price">From $55</div></div>
-      <div class="sc span2" onclick="openBook('Wellness Day Package')">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div><div class="sc-icon">🎁</div><div class="sc-name">Wellness Day Package — Best Value</div><div class="sc-price">Massage + Facial + Stretch in one visit · From $350</div></div>
-          <div style="background:var(--gold);padding:12px 18px;border-radius:2px;text-align:center;flex-shrink:0;"><div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:white;line-height:1;">$350</div><div style="font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.8);margin-top:2px;">Save $50</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TRUST -->
-<div class="trust">
-  <div class="ti"><span>✓</span> NYS Licensed Practitioners</div>
-  <div class="ti"><span>🏡</span> In-Home Service</div>
-  <div class="ti"><span>🔒</span> Fully Insured</div>
-  <div class="ti"><span>⭐</span> 5-Star Rated</div>
-  <div class="ti"><span>📍</span> Nassau · Suffolk · Hamptons</div>
-</div>
-
-<!-- SERVICES -->
-<section id="services">
-  <div class="sh">
-    <div class="sey">Everything We Offer</div>
-    <h2 class="st">Seven ways to <em>restore</em></h2>
-    <p class="ss">Every service delivered by a vetted, licensed professional — at your location, on your schedule.</p>
-  </div>
-
-  <div class="tabs" id="mainTabs">
-    <button class="tb on" onclick="swTab('massage',0)">Massage</button>
-    <button class="tb" onclick="swTab('training',1)">Personal Training</button>
-    <button class="tb" onclick="swTab('stretch',2)">Stretch Therapy</button>
-    <button class="tb" onclick="swTab('coaching',3)">Lifestyle Coaching</button>
-    <button class="tb" onclick="swTab('beauty',4)">Beauty & Cosmetics</button>
-    <button class="tb" onclick="swTab('care',5)">Personal Care</button>
-    <button class="tb" onclick="swTab('spa',6)">Mobile Spa</button>
-  </div>
-
-  <!-- MASSAGE -->
-  <div class="tp on" id="tp-massage">
-    <div class="sc2 feat" onclick="openBook('Swedish Massage')">
-      <div><div class="si">🌿</div><div class="sn">Swedish Massage</div><div class="sd">Gentle, flowing strokes to melt tension and promote deep relaxation. The perfect in-home de-stress session.</div><div class="sp">60 min · $130 &nbsp;|&nbsp; 90 min · $175</div></div>
-      <div class="fpb"><div class="fpb-a">$130</div><div class="fpb-l">Most Popular</div></div>
-    </div>
-    <div class="sc2" onclick="openBook('Deep Tissue Massage')"><div class="si">💪</div><div class="sn">Deep Tissue Massage</div><div class="sd">Targeted pressure to release chronic muscle tension and knots — ideal for athletes and desk workers alike.</div><div class="sp">60 min · $130 &nbsp;|&nbsp; 90 min · $175</div></div>
-    <div class="sc2" onclick="openBook('Sports Massage')"><div class="si">🏅</div><div class="sn">Sports Massage</div><div class="sd">Pre- or post-event treatment for runners, cyclists, CrossFit athletes, and triathletes across Long Island.</div><div class="sp">60 min · $140</div></div>
-    <div class="sc2" onclick="openBook('Prenatal Massage')"><div class="stag">Specialist</div><div class="si">🤰</div><div class="sn">Prenatal Massage</div><div class="sd">Certified prenatal massage to ease back pain, reduce swelling, and promote relaxation during pregnancy.</div><div class="sp">60 min · $140</div></div>
-    <div class="sc2" onclick="openBook('Couples Massage')"><div class="stag">2 Therapists</div><div class="si">💑</div><div class="sn">Couples Massage</div><div class="sd">Two licensed therapists arrive simultaneously for a shared in-home experience for couples or friends.</div><div class="sp">60 min · $240 per couple</div></div>
-    <div class="sc2" onclick="openBook('Chair Massage')"><div class="si">🪑</div><div class="sn">Chair Massage</div><div class="sd">Express seated massage — no table required. Perfect for corporate events, office visits, and gatherings.</div><div class="sp">15 min · $45 &nbsp;|&nbsp; 30 min · $75</div></div>
-  </div>
-
-  <!-- PERSONAL TRAINING -->
-  <div class="tp" id="tp-training">
-    <div class="sc2 feat" onclick="openBook('Personal Training')">
-      <div><div class="si">💪</div><div class="sn">1-on-1 Personal Training</div><div class="sd">Certified personal trainer comes to your home with all equipment. No gym membership or commute needed — just results.</div><div class="sp">45 min · $90 &nbsp;|&nbsp; 60 min · $110</div></div>
-      <div class="fpb"><div class="fpb-a">$110</div><div class="fpb-l">Per Session</div></div>
-    </div>
-    <div class="sc2" onclick="openBook('Small Group Training')"><div class="si">👥</div><div class="sn">Small Group Training</div><div class="sd">Train together with 2–4 people at the same location. Great for families, neighbors, or roommates.</div><div class="sp">60 min · $70/person</div></div>
-    <div class="sc2" onclick="openBook('Fitness Assessment')"><div class="si">📋</div><div class="sn">Fitness Assessment + Program</div><div class="sd">A comprehensive movement assessment followed by a custom 4–12 week program built around your goals and home setup.</div><div class="sp">75 min · $140</div></div>
-    <div class="sc2" onclick="openBook('Senior Fitness')"><div class="si">🧓</div><div class="sn">Senior & Functional Fitness</div><div class="sd">Gentle in-home exercise for older adults focused on balance, strength, mobility, and independence.</div><div class="sp">60 min · $110</div></div>
-    <div class="sc2" onclick="openBook('Corrective Exercise')"><div class="si">🦴</div><div class="sn">Corrective Exercise Training</div><div class="sd">Non-medical movement coaching to improve posture, reduce pain patterns, and restore functional movement.</div><div class="sp">60 min · $115</div></div>
-    <div class="sc2" onclick="openBook('Corporate Fitness')"><div class="stag">B2B</div><div class="si">🏢</div><div class="sn">Corporate Fitness Program</div><div class="sd">Recurring on-site personal training at Long Island corporate campuses. Monthly packages for teams of any size.</div><div class="sp">Custom corporate pricing</div></div>
-  </div>
-
-  <!-- STRETCH -->
-  <div class="tp" id="tp-stretch">
-    <div class="sc2 feat" onclick="openBook('Assisted Stretching')">
-      <div><div class="si">🧘</div><div class="sn">Assisted Stretch Session</div><div class="sd">One-on-one facilitated stretching to improve flexibility, joint mobility, and range of motion. You breathe — your therapist does the work.</div><div class="sp">45 min · $95 &nbsp;|&nbsp; 60 min · $115</div></div>
-      <div class="fpb"><div class="fpb-a">$95</div><div class="fpb-l">Per Session</div></div>
-    </div>
-    <div class="sc2" onclick="openBook('Fascial Stretch Therapy')"><div class="stag">Advanced</div><div class="si">🔗</div><div class="sn">Fascial Stretch Therapy</div><div class="sd">Deep connective tissue stretching targeting fascia, joints, and muscles simultaneously. Remarkable results for chronic tightness.</div><div class="sp">60 min · $130</div></div>
-    <div class="sc2" onclick="openBook('Athletic Stretch')"><div class="si">🏃</div><div class="sn">Athletic Performance Stretching</div><div class="sd">Pre- or post-workout stretch protocols for athletes. Activates before training and accelerates recovery afterward.</div><div class="sp">30 min · $65 &nbsp;|&nbsp; 45 min · $90</div></div>
-    <div class="sc2" onclick="openBook('Desk Worker Mobility')"><div class="si">💻</div><div class="sn">Desk Worker Mobility</div><div class="sd">Targeted routine to reverse prolonged sitting — neck, shoulders, hips, and lower back. Great for remote workers.</div><div class="sp">45 min · $95</div></div>
-    <div class="sc2" onclick="openBook('Compression Therapy')"><div class="si">🦵</div><div class="sn">Compression Therapy</div><div class="sd">NormaTec pneumatic compression therapy — standalone or as an add-on to any massage or stretch booking.</div><div class="sp">45 min · $85 &nbsp;|&nbsp; Add-on · $55</div></div>
-  </div>
-
-  <!-- COACHING -->
-  <div class="tp" id="tp-coaching">
-    <div class="sc2 feat" onclick="openBook('Lifestyle Coaching')">
-      <div><div class="si">🌟</div><div class="sn">1-on-1 Lifestyle Coaching</div><div class="sd">Personalized wellness coaching covering nutrition awareness, sleep optimization, stress management, and daily routine design. Non-clinical, behavior-focused, and genuinely practical.</div><div class="sp">60 min · $100 &nbsp;|&nbsp; Monthly (4 sessions) · $360</div></div>
-      <div class="fpb"><div class="fpb-a">$100</div><div class="fpb-l">Per Session</div></div>
-    </div>
-    <div class="sc2" onclick="openBook('Weight Management Coaching')"><div class="si">⚖️</div><div class="sn">Weight Management Coaching</div><div class="sd">Sustainable, non-medical behavioral coaching for weight management. Building lasting habits, not restrictive diets.</div><div class="sp">60 min · $100</div></div>
-    <div class="sc2" onclick="openBook('Accountability Coaching')"><div class="si">📅</div><div class="sn">Accountability Coaching</div><div class="sd">Weekly check-in sessions to keep you on track with your wellness goals. In-person or via video call.</div><div class="sp">30 min · $50/check-in</div></div>
-    <div class="sc2" onclick="openBook('Corporate Wellness Workshop')"><div class="stag">B2B</div><div class="si">🏢</div><div class="sn">Corporate Wellness Workshop</div><div class="sd">Lunch-and-learns and interactive team wellness sessions on stress resilience, movement, nutrition, and sleep health.</div><div class="sp">60 min event · From $400</div></div>
-  </div>
-
-  <!-- BEAUTY -->
-  <div class="tp" id="tp-beauty">
-    <div class="sc2 feat" onclick="openBook('Mobile Facial')">
-      <div><div class="si">✨</div><div class="sn">Mobile Facial</div><div class="sd">Full cleansing, exfoliation, steam, and hydration facial by a NYS-licensed esthetician — in the comfort of your home. No commute, just glowing skin.</div><div class="sp">60 min · $120 &nbsp;|&nbsp; 90 min advanced · $160</div></div>
-      <div class="fpb"><div class="fpb-a">$120</div><div class="fpb-l">Per Session</div></div>
-    </div>
-    <div class="sc2" onclick="openBook('Body Treatment')"><div class="si">💆</div><div class="sn">Body Treatment</div><div class="sd">Indulgent in-home body exfoliation, wraps, and deep-moisturizing treatments — sugar scrubs, mud wraps, and brightening options.</div><div class="sp">60 min · $130</div></div>
-    <div class="sc2" onclick="openBook('Spray Tan')"><div class="si">🌞</div><div class="sn">Mobile Spray Tan</div><div class="sd">Professional airbrush tanning at home. Perfect for events, Hamptons season, and year-round bronzing.</div><div class="sp">30 min · $75</div></div>
-    <div class="sc2" onclick="openBook('Brow & Lash')"><div class="si">👁️</div><div class="sn">Brow & Lash Services</div><div class="sd">Professional brow shaping, threading, tinting, and lash tinting by a licensed esthetician — at your location.</div><div class="sp">From $45</div></div>
-    <div class="sc2" onclick="openBook('LED Teeth Whitening')"><div class="si">😁</div><div class="sn">LED Teeth Whitening</div><div class="sd">Non-peroxide cosmetic LED teeth whitening for a brighter smile. Cosmetic treatment — no dental office required.</div><div class="sp">45 min · $99</div></div>
-  </div>
-
-  <!-- PERSONAL CARE -->
-  <div class="tp" id="tp-care">
-    <div class="sc2 feat" onclick="openBook('Mobile Manicure & Pedicure')">
-      <div><div class="si">💅</div><div class="sn">Mobile Manicure & Pedicure</div><div class="sd">NYS-licensed nail technician comes to your home for a full mani-pedi. Polish, gel, or spa treatment — no salon trip needed.</div><div class="sp">Manicure · $55 &nbsp;|&nbsp; Pedicure · $70 &nbsp;|&nbsp; Combo · $110</div></div>
-      <div class="fpb"><div class="fpb-a">$110</div><div class="fpb-l">Combo</div></div>
-    </div>
-    <div class="sc2" onclick="openBook('Blowout & Styling')"><div class="si">💇</div><div class="sn">Blowout & Express Styling</div><div class="sd">NYS-licensed cosmetologist for blowouts, event prep, and express hair styling at your home, hotel, or venue.</div><div class="sp">From $75</div></div>
-    <div class="sc2" onclick="openBook('Bridal Package')"><div class="stag">Popular</div><div class="si">👰</div><div class="sn">Bridal & Event Beauty</div><div class="sd">Full bridal prep package — hair, makeup add-on, manicure, and facial for the bride and wedding party at your venue.</div><div class="sp">Custom group pricing</div></div>
-    <div class="sc2" onclick="openBook('Senior Personal Care')"><div class="si">🧓</div><div class="sn">Senior In-Home Personal Care</div><div class="sd">Compassionate grooming and personal care for seniors and homebound individuals — manicures, hair care, and wellness treatments.</div><div class="sp">60 min · $85</div></div>
-  </div>
-
-  <!-- MOBILE SPA -->
-  <div class="tp" id="tp-spa">
-    <div class="sc2 feat" onclick="openBook('Wellness Day Package')">
-      <div><div class="si">🎁</div><div class="sn">Wellness Day Package</div><div class="sd">Our best-value bundle: Massage + Facial + Stretch Therapy in a single 3-hour visit. Save $50 versus booking separately. Our most-booked service.</div><div class="sp">3-hr visit · $350 (save $50)</div></div>
-      <div class="fpb"><div class="fpb-a">$350</div><div class="fpb-l">Best Value</div></div>
-    </div>
-    <div class="sc2" onclick="openBook('Hamptons Spa Package')"><div class="stag">Premium</div><div class="si">🛁</div><div class="sn">Hamptons Luxury Spa</div><div class="sd">3–4 hour in-home spa experience: massage, facial, body treatment, and nail care with multiple practitioners. The ultimate Hamptons afternoon.</div><div class="sp">3-hr from $450 &nbsp;|&nbsp; 4-hr from $600</div></div>
-    <div class="sc2" onclick="openBook('Bachelorette Package')"><div class="si">🥂</div><div class="sn">Bachelorette & Party Package</div><div class="sd">Group wellness experience for bachelorettes, birthdays, and celebrations. Multiple practitioners, curated menu, flexible pricing for 4–12 guests.</div><div class="sp">From $300 per group</div></div>
-    <div class="sc2" onclick="openBook('Corporate Spa Day')"><div class="stag">B2B</div><div class="si">🏢</div><div class="sn">Corporate Spa Day</div><div class="sd">On-site team wellness activation with massage stations, stretch sessions, and coaching talks. Packages from 2 to 8 hours.</div><div class="sp">Half-day from $1,200</div></div>
-    <div class="sc2" onclick="openBook('Monthly Membership')"><div class="si">🗓️</div><div class="sn">Monthly Wellness Membership</div><div class="sd">2 services per month at a bundled discount. Mix and match from any service line — the best way to stay consistently restored.</div><div class="sp">From $199/month</div></div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="sh">
-    <div class="sey">The Process</div>
-    <h2 class="st">Four steps to <em>restored</em></h2>
-    <p class="ss">We handle everything. You just choose your service and enjoy.</p>
-  </div>
-  <div class="steps">
-    <div class="step"><div class="stepn">01</div><div class="stepico">📱</div><div class="stepttl">Book Online</div><div class="stepdsc">Select your service, date, time, and address. Secure your session with a $50 deposit. Takes under 2 minutes.</div></div>
-    <div class="step"><div class="stepn">02</div><div class="stepico">✅</div><div class="stepttl">Get Confirmed</div><div class="stepdsc">Instant booking confirmation plus a brief intake form. Your assigned practitioner reaches out within 2 hours.</div></div>
-    <div class="step"><div class="stepn">03</div><div class="stepico">🚗</div><div class="stepttl">We Come to You</div><div class="stepdsc">Your licensed practitioner arrives with all equipment. You just need a comfortable space — that's it.</div></div>
-    <div class="step"><div class="stepn">04</div><div class="stepico">🌿</div><div class="stepttl">Feel Restored</div><div class="stepdsc">Enjoy your session and your day. Leave a review and earn credit toward your next booking.</div></div>
-  </div>
-</section>
-
-<!-- BOOKING -->
-<section id="book">
-  <div class="sh">
-    <div class="sey">Schedule Your Session</div>
-    <h2 class="st">Book <em>today</em></h2>
-    <p class="ss">Most sessions available within 48 hours across Nassau, Suffolk, and the Hamptons.</p>
-  </div>
-  <div class="bwrap">
-    <div class="binfo">
-      <h3>Ready to restore?</h3>
-      <p>Select your service, choose a date and time, and complete a secure payment. Your practitioner confirms within 2 hours. Free cancellation up to 24 hours before your appointment.</p>
-      <div class="bf"><div class="bfico">🔒</div><div class="bftxt"><strong>Secure Payments</strong><span>Encrypted via Stripe — PCI compliant</span></div></div>
-      <div class="bf"><div class="bfico">🔄</div><div class="bftxt"><strong>Free Cancellation</strong><span>Cancel or reschedule up to 24 hrs before, no charge</span></div></div>
-      <div class="bf"><div class="bfico">🪪</div><div class="bftxt"><strong>Licensed & Insured</strong><span>Every practitioner is licensed, background-checked, and insured</span></div></div>
-      <div class="bf"><div class="bfico">📍</div><div class="bftxt"><strong>We Come to You</strong><span>Nassau County, Suffolk County, and the Hamptons</span></div></div>
-      <div class="bf"><div class="bfico">📞</div><div class="bftxt"><strong>Questions? Text Us</strong><span>(516) 555-0100 — responses within 30 min</span></div></div>
-    </div>
-
-    <div class="bform" id="bform">
-      <div class="ftitle">Reserve Your Session</div>
-      <div class="fprog">
-        <div class="fdot act" id="dot1"></div>
-        <div class="fdot" id="dot2"></div>
-        <div class="fdot" id="dot3"></div>
-      </div>
-
-      <!-- STEP 1 -->
-      <div class="fstep on" id="fs1">
-        <div class="fg">
-          <label>Choose Your Service</label>
-          <div class="fstabs">
-            <button class="fstab on" onclick="swFormTab('massage',0)">Massage</button>
-            <button class="fstab" onclick="swFormTab('training',1)">Training</button>
-            <button class="fstab" onclick="swFormTab('stretch',2)">Stretch</button>
-            <button class="fstab" onclick="swFormTab('coaching',3)">Coaching</button>
-            <button class="fstab" onclick="swFormTab('beauty',4)">Beauty</button>
-            <button class="fstab" onclick="swFormTab('care',5)">Care</button>
-            <button class="fstab" onclick="swFormTab('spa',6)">Spa</button>
-          </div>
-          <div class="fstp on" id="fst-massage">
-            <div class="sopt" data-svc="Swedish Massage" data-price="130" onclick="pickSvc(this)"><span class="sopt-n">Swedish Massage</span><span class="sopt-p">From $130</span></div>
-            <div class="sopt" data-svc="Deep Tissue Massage" data-price="130" onclick="pickSvc(this)"><span class="sopt-n">Deep Tissue Massage</span><span class="sopt-p">From $130</span></div>
-            <div class="sopt" data-svc="Sports Massage" data-price="140" onclick="pickSvc(this)"><span class="sopt-n">Sports Massage</span><span class="sopt-p">$140</span></div>
-            <div class="sopt" data-svc="Prenatal Massage" data-price="140" onclick="pickSvc(this)"><span class="sopt-n">Prenatal Massage</span><span class="sopt-p">$140</span></div>
-            <div class="sopt" data-svc="Couples Massage" data-price="240" onclick="pickSvc(this)"><span class="sopt-n">Couples Massage</span><span class="sopt-p">$240/couple</span></div>
-            <div class="sopt" data-svc="Chair Massage" data-price="75" onclick="pickSvc(this)"><span class="sopt-n">Chair Massage</span><span class="sopt-p">From $45</span></div>
-          </div>
-          <div class="fstp" id="fst-training">
-            <div class="sopt" data-svc="Personal Training" data-price="110" onclick="pickSvc(this)"><span class="sopt-n">1-on-1 Personal Training</span><span class="sopt-p">$110</span></div>
-            <div class="sopt" data-svc="Small Group Training" data-price="70" onclick="pickSvc(this)"><span class="sopt-n">Small Group Training</span><span class="sopt-p">$70/person</span></div>
-            <div class="sopt" data-svc="Fitness Assessment" data-price="140" onclick="pickSvc(this)"><span class="sopt-n">Fitness Assessment</span><span class="sopt-p">$140</span></div>
-            <div class="sopt" data-svc="Senior Fitness" data-price="110" onclick="pickSvc(this)"><span class="sopt-n">Senior Fitness</span><span class="sopt-p">$110</span></div>
-            <div class="sopt" data-svc="Corrective Exercise" data-price="115" onclick="pickSvc(this)"><span class="sopt-n">Corrective Exercise</span><span class="sopt-p">$115</span></div>
-            <div class="sopt" data-svc="Corporate Fitness" data-price="0" onclick="pickSvc(this)"><span class="sopt-n">Corporate Fitness</span><span class="sopt-p">Custom Quote</span></div>
-          </div>
-          <div class="fstp" id="fst-stretch">
-            <div class="sopt" data-svc="Assisted Stretching" data-price="95" onclick="pickSvc(this)"><span class="sopt-n">Assisted Stretching</span><span class="sopt-p">From $95</span></div>
-            <div class="sopt" data-svc="Fascial Stretch Therapy" data-price="130" onclick="pickSvc(this)"><span class="sopt-n">Fascial Stretch Therapy</span><span class="sopt-p">$130</span></div>
-            <div class="sopt" data-svc="Athletic Stretch" data-price="65" onclick="pickSvc(this)"><span class="sopt-n">Athletic Stretch</span><span class="sopt-p">From $65</span></div>
-            <div class="sopt" data-svc="Desk Worker Mobility" data-price="95" onclick="pickSvc(this)"><span class="sopt-n">Desk Worker Mobility</span><span class="sopt-p">$95</span></div>
-            <div class="sopt" data-svc="Compression Therapy" data-price="85" onclick="pickSvc(this)"><span class="sopt-n">Compression Therapy</span><span class="sopt-p">$85</span></div>
-          </div>
-          <div class="fstp" id="fst-coaching">
-            <div class="sopt" data-svc="Lifestyle Coaching" data-price="100" onclick="pickSvc(this)"><span class="sopt-n">Lifestyle Coaching</span><span class="sopt-p">$100</span></div>
-            <div class="sopt" data-svc="Weight Management Coaching" data-price="100" onclick="pickSvc(this)"><span class="sopt-n">Weight Management Coaching</span><span class="sopt-p">$100</span></div>
-            <div class="sopt" data-svc="Accountability Coaching" data-price="50" onclick="pickSvc(this)"><span class="sopt-n">Accountability Coaching</span><span class="sopt-p">$50/check-in</span></div>
-            <div class="sopt" data-svc="Corporate Workshop" data-price="400" onclick="pickSvc(this)"><span class="sopt-n">Corporate Workshop</span><span class="sopt-p">From $400</span></div>
-          </div>
-          <div class="fstp" id="fst-beauty">
-            <div class="sopt" data-svc="Mobile Facial" data-price="120" onclick="pickSvc(this)"><span class="sopt-n">Mobile Facial</span><span class="sopt-p">$120</span></div>
-            <div class="sopt" data-svc="Body Treatment" data-price="130" onclick="pickSvc(this)"><span class="sopt-n">Body Treatment</span><span class="sopt-p">$130</span></div>
-            <div class="sopt" data-svc="Spray Tan" data-price="75" onclick="pickSvc(this)"><span class="sopt-n">Spray Tan</span><span class="sopt-p">$75</span></div>
-            <div class="sopt" data-svc="Brow & Lash" data-price="45" onclick="pickSvc(this)"><span class="sopt-n">Brow & Lash Services</span><span class="sopt-p">From $45</span></div>
-            <div class="sopt" data-svc="LED Teeth Whitening" data-price="99" onclick="pickSvc(this)"><span class="sopt-n">LED Teeth Whitening</span><span class="sopt-p">$99</span></div>
-          </div>
-          <div class="fstp" id="fst-care">
-            <div class="sopt" data-svc="Mobile Manicure & Pedicure" data-price="110" onclick="pickSvc(this)"><span class="sopt-n">Manicure & Pedicure</span><span class="sopt-p">Combo $110</span></div>
-            <div class="sopt" data-svc="Blowout & Styling" data-price="75" onclick="pickSvc(this)"><span class="sopt-n">Blowout & Styling</span><span class="sopt-p">From $75</span></div>
-            <div class="sopt" data-svc="Bridal Package" data-price="0" onclick="pickSvc(this)"><span class="sopt-n">Bridal & Event Beauty</span><span class="sopt-p">Custom Quote</span></div>
-            <div class="sopt" data-svc="Senior Personal Care" data-price="85" onclick="pickSvc(this)"><span class="sopt-n">Senior Personal Care</span><span class="sopt-p">$85</span></div>
-          </div>
-          <div class="fstp" id="fst-spa">
-            <div class="sopt" data-svc="Wellness Day Package" data-price="350" onclick="pickSvc(this)"><span class="sopt-n">✨ Wellness Day Package</span><span class="sopt-p">$350 — Save $50</span></div>
-            <div class="sopt" data-svc="Hamptons Spa Package" data-price="450" onclick="pickSvc(this)"><span class="sopt-n">Hamptons Luxury Spa</span><span class="sopt-p">From $450</span></div>
-            <div class="sopt" data-svc="Bachelorette Package" data-price="300" onclick="pickSvc(this)"><span class="sopt-n">Bachelorette Package</span><span class="sopt-p">From $300</span></div>
-            <div class="sopt" data-svc="Corporate Spa Day" data-price="1200" onclick="pickSvc(this)"><span class="sopt-n">Corporate Spa Day</span><span class="sopt-p">From $1,200</span></div>
-            <div class="sopt" data-svc="Monthly Membership" data-price="199" onclick="pickSvc(this)"><span class="sopt-n">Monthly Membership</span><span class="sopt-p">From $199/mo</span></div>
-          </div>
-        </div>
-        <p class="ferr" id="err1">Please select a service to continue.</p>
-        <div class="fnav"><div></div><button class="bnext" onclick="goStep(2)">Continue →</button></div>
-      </div>
-
-      <!-- STEP 2 -->
-      <div class="fstep" id="fs2">
-        <div class="frow">
-          <div class="fg"><label>First Name</label><input type="text" id="fn" placeholder="Jane" /></div>
-          <div class="fg"><label>Last Name</label><input type="text" id="ln" placeholder="Smith" /></div>
-        </div>
-        <div class="fg"><label>Email</label><input type="email" id="em" placeholder="jane@email.com" /></div>
-        <div class="fg"><label>Phone</label><input type="tel" id="ph" placeholder="(516) 555-0000" /></div>
-        <div class="fg"><label>Service Address</label><input type="text" id="addr" placeholder="123 Main St, Garden City, NY" /></div>
-        <div class="frow">
-          <div class="fg"><label>Preferred Date</label><input type="date" id="dt" /></div>
-          <div class="fg"><label>Preferred Time</label><select id="tm"><option value="">Select time</option><option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option><option>5:00 PM</option><option>6:00 PM</option><option>7:00 PM</option></select></div>
-        </div>
-        <div class="fg"><label>Notes (optional)</label><textarea id="nt" rows="2" placeholder="Health info, parking, special requests..."></textarea></div>
-        <p class="ferr" id="err2">Please fill in all required fields.</p>
-        <div class="fnav"><button class="bback" onclick="goStep(1)">← Back</button><button class="bnext" onclick="goStep(3)">Continue →</button></div>
-      </div>
-
-      <!-- STEP 3 -->
-      <div class="fstep" id="fs3">
-        <div class="obox">
-          <div class="orow"><span id="oSvc">Service</span><span id="oPrice">—</span></div>
-          <div class="orow"><span>Deposit (refundable)</span><span>$50.00</span></div>
-          <div class="orow"><span>Due Today</span><span>$50.00</span></div>
-        </div>
-        <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6;">A <strong>$50 refundable deposit</strong> holds your booking. Balance collected at time of service. Full refund if cancelled 24+ hours in advance.</p>
-        <div class="fg"><label>Card Details</label><div id="card-element"></div><div id="card-errors"></div></div>
-        <div class="fg"><label>Name on Card</label><input type="text" id="cn" placeholder="Jane Smith" /></div>
-        <button class="bpay" id="payBtn" onclick="doPayment()">🔒 &nbsp;Secure Booking — $50 Deposit</button>
-        <div class="fnav" style="margin-top:10px;"><button class="bback" onclick="goStep(2)">← Back</button><span style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;">🔒 Powered by Stripe</span></div>
-      </div>
-
-      <div class="bsuccess" id="bsuccess"></div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section id="testimonials">
-  <div class="sh">
-    <div class="sey" style="color:var(--sage-light);">What Clients Say</div>
-    <h2 class="st" style="color:var(--white);">Long Island <em>loves it</em></h2>
-  </div>
-  <div class="tgrid">
-    <div class="tc"><div class="tstar">★★★★★</div><div class="tt">I've used Zeel for years but the inconsistency was frustrating. LI Restore sends the same therapist every single time — she knows exactly what I need. The best in-home wellness experience on Long Island.</div><div class="ta">Michael T.</div><div class="tl">Garden City, Nassau County</div></div>
-    <div class="tc"><div class="tstar">★★★★★</div><div class="tt">We booked the Wellness Day Package for our Hamptons rental. Massage, facial, and stretch therapy back to back — we were all glowing by dinner. Couldn't believe how seamless it was. Will be booking every summer.</div><div class="ta">Sarah K.</div><div class="tl">Bridgehampton, East End</div></div>
-    <div class="tc"><div class="tstar">★★★★★</div><div class="tt">My trainer comes to my home three mornings a week. I've tried gyms my whole life — removing the commute changed everything. I'm in the best shape of my life at 52 and I genuinely enjoy every session.</div><div class="ta">David R.</div><div class="tl">Huntington, Suffolk County</div></div>
-  </div>
-</section>
-
-<!-- COVERAGE -->
-<section id="coverage">
-  <div class="sh">
-    <div class="sey">Service Area</div>
-    <h2 class="st">Where we <em>travel</em></h2>
-    <p class="ss">Serving Nassau County, Suffolk County, and the full Hamptons corridor. ✦ Hamptons locations available with seasonal premium packages.</p>
-  </div>
-  <div class="cgrid">
-    <div><div class="ch">Nassau County</div>
-      <div class="clist">
-        <div class="ci">Garden City</div><div class="ci">Great Neck</div>
-        <div class="ci">Manhasset</div><div class="ci">Port Washington</div>
-        <div class="ci">Roslyn</div><div class="ci">Syosset</div>
-        <div class="ci">Oyster Bay</div><div class="ci">Westbury</div>
-        <div class="ci">Mineola</div><div class="ci">Woodbury</div>
-      </div>
-    </div>
-    <div><div class="ch">Suffolk County & East End</div>
-      <div class="clist">
-        <div class="ci">Huntington</div><div class="ci">Northport</div>
-        <div class="ci">Smithtown</div><div class="ci">Port Jefferson</div>
-        <div class="ci prem">Southampton</div><div class="ci prem">East Hampton</div>
-        <div class="ci prem">Bridgehampton</div><div class="ci prem">Montauk</div>
-        <div class="ci prem">Sag Harbor</div><div class="ci prem">Amagansett</div>
-      </div>
-    </div>
-  </div>
-  <div class="ccta">
-    <div><strong>Don't see your area?</strong><span>We're expanding. Text us to check availability in your zip code.</span></div>
-    <a href="sms:+15165550100" class="btn btn-p">Text Us — (516) 555-0100</a>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="fg2">
+<!-- ============ HERO ============ -->
+<header class="band hero" id="top">
+  <div class="wrap hero__grid">
     <div>
-      <div class="fbrand">LI <span>Restore</span></div>
-      <div class="fdesc">Long Island's mobile wellness studio — massage, training, stretch, coaching, beauty, and spa delivered to your door by licensed professionals.</div>
+      <p class="eyebrow">Suffolk County · East End &amp; central corridor</p>
+      <h1>Pollinators don't need<br>more hives. They need<br><em>the land back.</em></h1>
+      <p class="lede hero__body">
+        LIRestore manages honey bee colonies on Long Island estates, vineyards, resorts, and
+        workplaces — and pairs every one of them with native forage and a measured ecological
+        baseline. Hives are the visible part. Restored ground is the part that works.
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--solid" href="#assess">Request a site assessment <span class="btn__arrow">→</span></a>
+        <a class="btn" href="#programs">See programs</a>
+      </div>
+      <div class="hero__meta">
+        <div><b class="num">14</b>visits per season</div>
+        <div><b class="num">4 mi</b>foraging radius per colony</div>
+        <div><b class="num">100%</b>of honey stays with you</div>
+      </div>
     </div>
-    <div class="fcol"><h4>Wellness</h4><ul class="flinks"><li><a href="#services">Massage Therapy</a></li><li><a href="#services">Personal Training</a></li><li><a href="#services">Stretch Therapy</a></li><li><a href="#services">Lifestyle Coaching</a></li></ul></div>
-    <div class="fcol"><h4>Beauty & Spa</h4><ul class="flinks"><li><a href="#services">Mobile Facials</a></li><li><a href="#services">Personal Care</a></li><li><a href="#services">Mobile Spa Packages</a></li><li><a href="#services">Bridal & Events</a></li></ul></div>
-    <div class="fcol"><h4>Company</h4><ul class="flinks"><li><a href="#coverage">Service Area</a></li><li><a href="#how">How It Works</a></li><li><a href="#services">Corporate Wellness</a></li><li><a href="#">Gift Cards</a></li><li><a href="#">Cancellation Policy</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+
+    <!-- SIGNATURE: the land in cross-section -->
+    <figure class="section-figure" style="margin:0">
+      <svg class="xsec" viewBox="0 0 520 470" role="img"
+           aria-label="Cross-section of East End ground: canopy, forage layer, surface, topsoil, glacial outwash, root zone, and the sole-source aquifer beneath.">
+        <defs>
+          <pattern id="stipple" width="7" height="7" patternUnits="userSpaceOnUse">
+            <circle cx="1.6" cy="1.6" r=".85" fill="#5C7A73" opacity=".5"/>
+            <circle cx="5.2" cy="4.8" r=".7" fill="#5C7A73" opacity=".35"/>
+          </pattern>
+          <pattern id="hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+            <line x1="0" y1="0" x2="0" y2="9" stroke="#5C7A73" stroke-width=".7" opacity=".38"/>
+          </pattern>
+          <pattern id="deep" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+            <line x1="0" y1="0" x2="0" y2="12" stroke="#2F4A3C" stroke-width=".8" opacity=".3"/>
+          </pattern>
+        </defs>
+
+        <!-- 1 · canopy -->
+        <g class="xlayer">
+          <path d="M8 78 L44 40 L80 78 Z" fill="#2F4A3C" opacity=".82"/>
+          <path d="M62 78 L96 30 L130 78 Z" fill="#2F4A3C" opacity=".62"/>
+          <path d="M258 78 L288 44 L318 78 Z" fill="#2F4A3C" opacity=".72"/>
+          <line x1="44" y1="78" x2="44" y2="96" stroke="#2F4A3C" stroke-width="1.4"/>
+          <line x1="96" y1="78" x2="96" y2="96" stroke="#2F4A3C" stroke-width="1.4"/>
+          <line x1="288" y1="78" x2="288" y2="96" stroke="#2F4A3C" stroke-width="1.4"/>
+          <line class="lead" x1="330" y1="56" x2="392" y2="56"/>
+          <text class="lbl" x="398" y="59">canopy</text>
+        </g>
+
+        <!-- 2 · forage layer (the point of the whole drawing) -->
+        <g class="xlayer">
+          <rect x="8" y="96" width="376" height="62" fill="#C9A227" opacity=".14"/>
+          <line x1="8" y1="96" x2="384" y2="96" stroke="#C9A227" stroke-width="1"/>
+          <g stroke="#8a6f12" stroke-width="1.1" fill="none">
+            <path class="stem" d="M34 158 C34 138 26 132 28 118"/>
+            <path class="stem" d="M74 158 C74 140 82 134 80 116"/>
+            <path class="stem" d="M118 158 C118 142 110 136 112 122"/>
+            <path class="stem" d="M162 158 C162 138 170 132 168 114"/>
+            <path class="stem" d="M206 158 C206 142 198 134 200 120"/>
+            <path class="stem" d="M250 158 C250 140 258 134 256 117"/>
+            <path class="stem" d="M300 158 C300 142 292 135 294 121"/>
+            <path class="stem" d="M344 158 C344 139 352 133 350 115"/>
+          </g>
+          <g fill="#C9A227">
+            <circle cx="28" cy="116" r="3.4"/><circle cx="80" cy="114" r="3"/>
+            <circle cx="112" cy="120" r="3.2"/><circle cx="168" cy="112" r="3.5"/>
+            <circle cx="200" cy="118" r="3"/><circle cx="256" cy="115" r="3.3"/>
+            <circle cx="294" cy="119" r="3"/><circle cx="350" cy="113" r="3.4"/>
+          </g>
+          <line class="lead" x1="392" y1="124" x2="392" y2="124"/>
+          <line class="lead" x1="358" y1="127" x2="392" y2="127"/>
+          <text class="lbl--key" x="398" y="124">forage layer</text>
+          <text class="lbl" x="398" y="137">0–4 ft · what we restore</text>
+        </g>
+
+        <!-- 3 · surface datum -->
+        <g class="xlayer">
+          <line x1="8" y1="158" x2="384" y2="158" stroke="#1B2420" stroke-width="1.9"/>
+          <line class="lead" x1="384" y1="158" x2="392" y2="158"/>
+          <text class="lbl" x="398" y="161">surface · 0 ft</text>
+        </g>
+
+        <!-- 4 · topsoil -->
+        <g class="xlayer">
+          <rect x="8" y="158" width="376" height="44" fill="url(#stipple)"/>
+          <rect x="8" y="158" width="376" height="44" fill="#2F4A3C" opacity=".07"/>
+          <line x1="8" y1="202" x2="384" y2="202" stroke="#5C7A73" stroke-width=".8" stroke-dasharray="5 4"/>
+          <line class="lead" x1="384" y1="182" x2="392" y2="182"/>
+          <text class="lbl" x="398" y="185">topsoil</text>
+        </g>
+
+        <!-- 5 · glacial outwash -->
+        <g class="xlayer">
+          <rect x="8" y="202" width="376" height="98" fill="url(#hatch)"/>
+          <line x1="8" y1="300" x2="384" y2="300" stroke="#5C7A73" stroke-width=".8" stroke-dasharray="5 4"/>
+          <line class="lead" x1="384" y1="248" x2="392" y2="248"/>
+          <text class="lbl" x="398" y="251">glacial outwash</text>
+          <text class="lbl" x="398" y="264">sand · high infiltration</text>
+        </g>
+
+        <!-- 6 · root zone -->
+        <g class="xlayer">
+          <rect x="8" y="300" width="376" height="86" fill="url(#deep)" opacity=".55"/>
+          <g stroke="#2F4A3C" stroke-width="1.15" fill="none" opacity=".8">
+            <path d="M44 202 C44 240 34 258 38 300 C40 328 30 344 34 372"/>
+            <path d="M44 240 C60 252 66 268 64 292"/>
+            <path d="M96 202 C96 244 108 262 104 300 C102 330 112 348 108 376"/>
+            <path d="M96 246 C80 258 74 274 76 296"/>
+            <path d="M288 202 C288 242 278 260 282 300 C284 326 274 342 278 368"/>
+            <path d="M288 244 C304 256 310 272 308 294"/>
+          </g>
+          <line class="lead" x1="384" y1="340" x2="392" y2="340"/>
+          <text class="lbl" x="398" y="343">root zone</text>
+        </g>
+
+        <!-- 7 · water table -->
+        <g class="xlayer">
+          <path d="M8 396 Q54 388 100 396 T192 396 T284 396 T376 396 L384 396"
+                fill="none" stroke="#5C7A73" stroke-width="1.6"/>
+          <path d="M8 396 Q54 388 100 396 T192 396 T284 396 T376 396 L384 396 L384 452 L8 452 Z"
+                fill="#5C7A73" opacity=".18"/>
+          <path d="M8 412 Q54 405 100 412 T192 412 T284 412 T376 412"
+                fill="none" stroke="#5C7A73" stroke-width=".7" opacity=".55"/>
+          <path d="M8 428 Q54 421 100 428 T192 428 T284 428 T376 428"
+                fill="none" stroke="#5C7A73" stroke-width=".7" opacity=".4"/>
+          <line class="lead" x1="384" y1="404" x2="392" y2="404"/>
+          <text class="lbl" x="398" y="407">water table</text>
+          <text class="lbl--key" x="398" y="420">sole-source</text>
+          <text class="lbl--key" x="398" y="433">aquifer</text>
+        </g>
+      </svg>
+      <figcaption>Fig. 1 — Typical East End profile. Every management decision above the datum shows up below it.</figcaption>
+    </figure>
   </div>
-  <div class="fbot">
-    <div>© 2026 LI Restore LLC · LIRestore.com · Long Island, NY · All Rights Reserved</div>
-    <div style="display:flex;gap:12px;align-items:center;"><span>🔒 Payments by Stripe</span><span>·</span><span>✓ NYS Licensed Practitioners</span></div>
+</header>
+
+<!-- ============ METHOD ============ -->
+<section class="band band--sand stratum" id="method">
+  <span class="stratum__label">Method</span>
+  <div class="wrap rise">
+    <p class="eyebrow">Three pillars, one contract</p>
+    <h2 style="max-width:24ch">We don't sell hives on their own. Here's why that matters.</h2>
+    <p class="lede" style="margin-top:1.3rem;color:#3c4a44">
+      A honey bee colony is livestock. Adding colonies to a landscape with no forage moves the
+      problem rather than solving it, and competes with the wild bees already there. So colonies,
+      habitat, and measurement travel together in every program we run.
+    </p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar__key"><i></i>C · Colonies</div>
+        <h3>Managed apiaries</h3>
+        <p>A named beekeeper, fourteen visits from April through November, documented varroa
+        monitoring, all treatments and feed, hurricane protocol, state registration handled.
+        You keep every ounce of honey.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar__key"><i></i>H · Habitat</div>
+        <h3>Native forage</h3>
+        <p>Meadow conversion, hedgerows, borders, and mowing and pesticide protocols designed for
+        your soil and light. Planned in winter, planted in spring, managed on a calendar you keep.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar__key"><i></i>M · Measurement</div>
+        <h3>Ecological baseline</h3>
+        <p>Wild bee transect surveys, pollen analysis identifying the plant species actually in
+        use, and a pesticide residue panel. Delivered as a report you can hand to a certifier,
+        a board, or a buyer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROGRAMS ============ -->
+<section class="band stratum" id="programs">
+  <span class="stratum__label">Programs</span>
+  <div class="wrap rise">
+    <p class="eyebrow">Annual programs · billed monthly across twelve months</p>
+    <h2 style="max-width:26ch">Five programs, ordered by how much ground they cover.</h2>
+
+    <div style="margin-top:2.8rem">
+
+      <!-- Tier 1 -->
+      <article class="tier" style="--depth:2px">
+        <div>
+          <p class="tier__for">Private residences</p>
+          <h3 class="tier__name">Estate Essential</h3>
+          <p class="tier__desc">The entry program. Two colonies, properly kept, with honey extracted
+            to bulk for your own kitchen. For owners who want bees on the property and want them
+            done right.</p>
+          <ul class="tier__inc">
+            <li>2 colonies · 8 visits, April–November</li>
+            <li>All treatments, feed, and equipment</li>
+            <li>Honey extracted to bulk container</li>
+            <li>Written siting assessment and annual health summary</li>
+            <li>New York State apiary registration filed on your behalf</li>
+          </ul>
+        </div>
+        <div class="tier__price">
+          <span class="tier__fig">$2,750</span>
+          <span class="tier__per">per year</span>
+          <div class="scope">
+            <span class="pip pip--on" title="Colonies included">C</span>
+            <span class="pip pip--part" title="Habitat consultation only">H</span>
+            <span class="pip" title="Measurement not included">M</span>
+          </div>
+          <div class="tier__setup">Setup $1,650 · first year only</div>
+        </div>
+      </article>
+
+      <!-- Tier 2 -->
+      <article class="tier" style="--depth:3px">
+        <div>
+          <p class="tier__for">High-value estates · South Fork</p>
+          <h3 class="tier__name">Estate Signature</h3>
+          <p class="tier__desc">Twice-monthly care, honey bottled under your own estate label, and
+            a baseline that tells you which wild pollinators you already have. The program most
+            South Fork properties choose.</p>
+          <ul class="tier__inc">
+            <li>2 colonies · 14 visits, April–November</li>
+            <li>Roughly 60 jars, bottled and labeled to your estate</li>
+            <li>One private hive experience for family or guests</li>
+            <li>Habitat consultation and planting plan</li>
+            <li>Wild-pollinator baseline survey</li>
+          </ul>
+        </div>
+        <div class="tier__price">
+          <span class="tier__fig">$4,200</span>
+          <span class="tier__per">per year</span>
+          <div class="scope">
+            <span class="pip pip--on">C</span>
+            <span class="pip pip--on">H</span>
+            <span class="pip pip--part">M</span>
+          </div>
+          <div class="tier__setup">Setup $1,850 · first year only</div>
+        </div>
+      </article>
+
+      <!-- Tier 3 -->
+      <article class="tier" style="--depth:4px">
+        <div>
+          <p class="tier__for">Wineries · farm brands · North Fork</p>
+          <h3 class="tier__name">Vineyard &amp; Farm Partner</h3>
+          <p class="tier__desc">Built for working land with a tasting room attached. Four colonies,
+            pollinator strips between the rows, and a single-vineyard honey with a vintage on the
+            label that your guests can carry home.</p>
+          <ul class="tier__inc">
+            <li>4 colonies · 14 visits, April–November</li>
+            <li>Single-vineyard honey, vintage-dated, for retail or hospitality</li>
+            <li>Pollinator strip and cover-crop design consultation</li>
+            <li>Coordination with your existing spray and IPM calendar</li>
+            <li>One public harvest event on your site</li>
+          </ul>
+        </div>
+        <div class="tier__price">
+          <span class="tier__fig">$4,900</span>
+          <span class="tier__per">per year</span>
+          <div class="scope">
+            <span class="pip pip--on">C</span>
+            <span class="pip pip--on">H</span>
+            <span class="pip pip--part">M</span>
+          </div>
+          <div class="tier__setup">Setup $2,400 · first year only</div>
+        </div>
+      </article>
+
+      <!-- Tier 4 -->
+      <article class="tier" style="--depth:6px">
+        <div>
+          <p class="tier__for">Corporate grounds · institutions · clubs</p>
+          <h3 class="tier__name">Property &amp; Workplace</h3>
+          <p class="tier__desc">For grounds that have to justify themselves to a board. Staff
+            engagement events, co-branded honey for clients and gifting, and an annual report
+            documented for green building and certification credit.</p>
+          <ul class="tier__inc">
+            <li>2–3 colonies · 14 visits, April–November</li>
+            <li>3 staff or tenant engagement events, suits and equipment provided</li>
+            <li>120 co-branded jars for gifting or reception</li>
+            <li>Annual impact report with certification-credit documentation</li>
+            <li>Full baseline: wild bee survey, pollen analysis, residue panel</li>
+          </ul>
+        </div>
+        <div class="tier__price">
+          <span class="tier__fig">$6,900</span>
+          <span class="tier__per">per year</span>
+          <div class="scope">
+            <span class="pip pip--on">C</span>
+            <span class="pip pip--on">H</span>
+            <span class="pip pip--on">M</span>
+          </div>
+          <div class="tier__setup">Setup $2,200 · 24-month initial term</div>
+        </div>
+      </article>
+
+      <!-- Tier 5 — the terminal stratum -->
+      <article class="tier tier--deep">
+        <div>
+          <p class="tier__for">Resorts · inns · destination venues</p>
+          <h3 class="tier__name">Hospitality Program</h3>
+          <p class="tier__desc">The apiary becomes an amenity that earns. Honey supplies your
+            kitchen, bar, and spa; the hives supply a guest experience you can sell; the habitat
+            supplies the grounds. We train your staff to run the guest-facing side.</p>
+          <ul class="tier__inc">
+            <li>4–8 colonies · 14+ visits, with in-season on-call response</li>
+            <li>Guest programming calendar: tours, tastings, harvest sessions</li>
+            <li>Honey supplied to kitchen, bar, and spa on a delivery schedule</li>
+            <li>Staff training so your team can lead tours without us</li>
+            <li>Interpretive signage, seasonal press assets, and photography</li>
+            <li>Full baseline plus year-over-year trend reporting</li>
+          </ul>
+        </div>
+        <div class="tier__price">
+          <span class="tier__fig">$14,000</span>
+          <span class="tier__per">to $28,000 per year</span>
+          <div class="scope">
+            <span class="pip pip--on">C</span>
+            <span class="pip pip--on">H</span>
+            <span class="pip pip--on">M</span>
+          </div>
+          <div class="tier__setup">Setup from $3,500 · scoped per property</div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="scope-legend">
+      <span><b>C</b> colonies</span>
+      <span><b>H</b> habitat</span>
+      <span><b>M</b> measurement</span>
+      <span>Half-filled marker means consultation only, without installation or lab work.</span>
+    </div>
+    <p style="font-family:var(--mono);font-size:.72rem;color:var(--brack);margin-top:1.4rem;letter-spacing:.04em">
+      Additional colonies beyond your tier: $850 per year. One free colony replacement per colony
+      per season is included in every program.
+    </p>
+  </div>
+</section>
+
+<!-- ============ PROJECT WORK ============ -->
+<section class="band band--sand stratum" id="project">
+  <span class="stratum__label">Project work</span>
+  <div class="wrap rise">
+    <p class="eyebrow">One-time and à la carte</p>
+    <h2 style="max-width:24ch">Work you can book without a program.</h2>
+    <table class="ptab">
+      <thead>
+        <tr><th scope="col">Service</th><th scope="col">Price</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="svc">Habitat design</span>
+            <span class="note">Site assessment, planting plan, species list, maintenance calendar</span></td>
+          <td class="amt">$2,500 – $9,000</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Habitat installation</span>
+            <span class="note">Meadow conversion, borders, hedgerow — plant material at cost</span></td>
+          <td class="amt">$4 – $12 / sq ft</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Annual habitat management</span>
+            <span class="note">Scheduled mowing, overseeding, invasive control</span></td>
+          <td class="amt">$1,200 – $6,000 / yr</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Pollinator &amp; contaminant baseline</span>
+            <span class="note">Pollen analysis, pesticide residue panel, wild bee transect, written report</span></td>
+          <td class="amt">$6,500 / site</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Annual monitoring renewal</span>
+            <span class="note">Year-over-year trend reporting on an established baseline</span></td>
+          <td class="amt">$4,200 / site / yr</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Multi-site portfolio assessment</span>
+            <span class="note">For owners and managers with several properties</span></td>
+          <td class="amt">$18,000 – $45,000</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Swarm capture and relocation</span>
+            <span class="note">Live removal. Call us before anyone reaches for a pesticide — Suffolk County code requires it.</span></td>
+          <td class="amt">$375 – $650</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Structural colony removal and exclusion</span>
+            <span class="note">Colonies inside walls, soffits, and chimneys, with the entry sealed</span></td>
+          <td class="amt">$850 – $2,800</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Workshop or hive experience</span>
+            <span class="note">Up to 25 people, suits and equipment provided, on your site</span></td>
+          <td class="amt">$1,400</td>
+        </tr>
+        <tr>
+          <td><span class="svc">Co-branded honey for gifting</span>
+            <span class="note">Your label, our honey. Ordered by October for December delivery.</span></td>
+          <td class="amt">$22 – $34 / unit</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ LIMITS ============ -->
+<section class="band band--dark stratum" id="limits">
+  <span class="stratum__label" style="background:var(--ink);color:var(--sand)">Our limits</span>
+  <div class="wrap rise">
+    <div class="limits__grid">
+      <div>
+        <p class="eyebrow">What we won't do</p>
+        <h2>The things we<br>turn down.</h2>
+        <div class="limits__note">
+          Most of our competitors will sell you as many hives as you'll buy.<br><br>
+          We publish a limit instead — because a client who later learns their program was
+          ecologically hollow is a client we've lost, and a landscape we've made worse.
+        </div>
+      </div>
+      <div>
+        <div class="limit">
+          <h3>We cap colony density per acre of assessed forage.</h3>
+          <p>If your property can't feed the colonies you've asked for, we'll tell you the number
+          it can support and place that many. This is not negotiable, including when you'd rather
+          we placed more.</p>
+        </div>
+        <div class="limit">
+          <h3>We won't place colonies against protected habitat.</h3>
+          <p>No siting within our published buffer of Central Pine Barrens core, town preserves, or
+          land-trust holdings without an ecological assessment that clears it first.</p>
+        </div>
+        <div class="limit">
+          <h3>We don't sell a hives-only product.</h3>
+          <p>Every program includes habitat. If you want colonies and nothing else, we're the wrong
+          company, and we'll refer you to a good local beekeeper who'll do it well.</p>
+        </div>
+        <div class="limit">
+          <h3>We document the wild bees before we add honey bees.</h3>
+          <p>You get a baseline whether or not the number flatters the plan. If the survey says your
+          site is better served by habitat alone, that's what we'll recommend.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="band stratum" id="assess">
+  <span class="stratum__label">Start here</span>
+  <div class="wrap cta rise">
+    <div>
+      <p class="eyebrow">Season planning opens in autumn</p>
+      <h2 style="max-width:22ch">Start with an assessment, not a quote.</h2>
+      <p>We walk the property, read the light and the soil, check the setbacks against your town
+      code, and tell you what the ground can actually support. You get a written siting assessment
+      and a recommended program. If the answer is that you don't need us, that's in the report too.</p>
+      <p style="font-family:var(--mono);font-size:.72rem;color:var(--brack);letter-spacing:.04em;margin-top:1.5rem">
+        Colonies are ordered in January for April placement. Programs starting in a given season
+        close at the end of the preceding January.
+      </p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.7rem;align-items:flex-start">
+      <a class="btn btn--solid" href="mailto:hello@lirestore.com?subject=Site%20assessment%20request">
+        Request an assessment <span class="btn__arrow">→</span></a>
+      <a class="btn" href="mailto:swarm@lirestore.com?subject=Swarm%20call">Report a swarm</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap foot__in">
+    <span>LIRestore · Pollinator stewardship · Suffolk County, New York</span>
+    <span><a href="mailto:hello@lirestore.com">hello@lirestore.com</a></span>
+    <span>Registered with NYS Ag &amp; Markets · Fully insured</span>
   </div>
 </footer>
 
-<div class="sticky-cta">
-  <div style="font-size:11px;color:rgba(255,255,255,0.65);">Massage · Training · Beauty · Spa — At Your Door</div>
-  <button class="sticky-btn" onclick="document.getElementById('book').scrollIntoView({behavior:'smooth'})">Book a Session</button>
-</div>
-
 <script>
-  // Main service tab switcher
-  const mainTabNames = ['massage','training','stretch','coaching','beauty','care','spa'];
-  function swTab(name, idx) {
-    document.querySelectorAll('#mainTabs .tb').forEach((b,i) => b.classList.toggle('on', i === idx));
-    document.querySelectorAll('.tp').forEach(p => p.classList.remove('on'));
-    document.getElementById('tp-' + name).classList.add('on');
+(function(){
+  var els = document.querySelectorAll('.rise');
+  if(!('IntersectionObserver' in window)){
+    els.forEach(function(e){e.classList.add('in')}); return;
   }
-
-  // Booking state
-  let selSvc = '', selPrice = 0, stripe, cardEl;
-
-  const formTabNames = ['massage','training','stretch','coaching','beauty','care','spa'];
-  function swFormTab(name, idx) {
-    document.querySelectorAll('.fstab').forEach((b,i) => b.classList.toggle('on', i === idx));
-    document.querySelectorAll('.fstp').forEach(p => p.classList.remove('on'));
-    document.getElementById('fst-' + name).classList.add('on');
-  }
-
-  function pickSvc(el) {
-    document.querySelectorAll('.sopt').forEach(o => o.classList.remove('sel'));
-    el.classList.add('sel');
-    selSvc = el.dataset.svc;
-    selPrice = parseInt(el.dataset.price) || 0;
-    document.getElementById('err1').style.display = 'none';
-  }
-
-  function openBook(svcName) {
-    document.getElementById('book').scrollIntoView({ behavior: 'smooth' });
-    setTimeout(() => {
-      document.querySelectorAll('.sopt').forEach(o => {
-        if (o.dataset.svc === svcName) pickSvc(o);
-      });
-    }, 700);
-  }
-
-  function goStep(n) {
-    if (n === 2 && !selSvc) { document.getElementById('err1').style.display = 'block'; return; }
-    if (n === 3) {
-      if (['fn','ln','em','ph','addr','dt','tm'].some(id => !document.getElementById(id).value)) {
-        document.getElementById('err2').style.display = 'block'; return;
-      }
-      document.getElementById('err2').style.display = 'none';
-      document.getElementById('oSvc').textContent = selSvc;
-      document.getElementById('oPrice').textContent = selPrice > 0 ? '$' + selPrice.toLocaleString() + '.00' : 'Custom';
-      if (!stripe) initStripe();
-    }
-    for (let i = 1; i <= 3; i++) {
-      const d = document.getElementById('dot' + i);
-      d.classList.remove('act','done');
-      if (i < n) d.classList.add('done');
-      if (i === n) d.classList.add('act');
-    }
-    document.querySelectorAll('.fstep').forEach(s => s.classList.remove('on'));
-    document.getElementById('fs' + n).classList.add('on');
-  }
-
-  function initStripe() {
-    try {
-      stripe = Stripe('pk_test_51ABC123REPLACE_WITH_YOUR_KEY');
-      const els = stripe.elements({ fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400&display=swap' }] });
-      cardEl = els.create('card', { style: { base: { fontFamily: '"DM Sans", sans-serif', fontSize: '14px', color: '#0e1a14', '::placeholder': { color: '#b0a99a' } } } });
-      cardEl.mount('#card-element');
-      cardEl.on('change', e => { document.getElementById('card-errors').textContent = e.error ? e.error.message : ''; });
-    } catch(e) {
-      document.getElementById('card-element').innerHTML = '<div style="font-size:13px;color:var(--muted);padding:8px 0;">💳 Card input — replace Stripe key to activate live payments</div>';
-    }
-  }
-
-  async function doPayment() {
-    const btn = document.getElementById('payBtn');
-    btn.disabled = true; btn.textContent = 'Processing...';
-    const name = document.getElementById('fn').value;
-    const email = document.getElementById('em').value;
-    // Simulate — replace with real Stripe PaymentIntent in production
-    await new Promise(r => setTimeout(r, 1500));
-    document.querySelector('.ftitle').style.display = 'none';
-    document.querySelector('.fprog').style.display = 'none';
-    document.querySelectorAll('.fstep').forEach(s => s.style.display = 'none');
-    const s = document.getElementById('bsuccess');
-    s.style.display = 'block';
-    s.innerHTML = `<div class="si2">🌿</div><div class="st2">You're booked!</div><div class="ss2">Hi <strong>${name}</strong>, your <strong>${selSvc}</strong> is confirmed.<br>A confirmation is on its way to ${email}.<br>Your practitioner will reach out within 2 hours.<br><br><strong>Questions?</strong> Text (516) 555-0100</div>`;
-  }
-
-  // Min booking date = tomorrow
-  const dtEl = document.getElementById('dt');
-  if (dtEl) { const t = new Date(); t.setDate(t.getDate() + 1); dtEl.min = t.toISOString().split('T')[0]; }
-
-  // Nav shrink
-  window.addEventListener('scroll', () => {
-    document.getElementById('nav').style.padding = window.scrollY > 50 ? '12px 48px' : '20px 48px';
-  });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  els.forEach(function(e){io.observe(e)});
+})();
 </script>
 </body>
 </html>
