@@ -232,9 +232,47 @@ h1 em{font-style:normal;font-variation-settings:"SOFT" 90,"WONK" 1;color:var(--p
   border-left:2px solid var(--pollen);padding-left:1.1rem;margin-top:2rem}
 
 /* ============ CTA + FOOTER ============ */
-.cta{display:grid;grid-template-columns:1fr auto;gap:clamp(24px,4vw,56px);align-items:end}
-@media(max-width:820px){.cta{grid-template-columns:1fr;align-items:start}}
+.cta{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4.5vw,72px);align-items:start}
+@media(max-width:900px){.cta{grid-template-columns:1fr}}
 .cta p{max-width:40ch;margin:1.2rem 0 0;color:#3c4a44}
+
+/* ---- inquiry form: styled as a survey intake sheet ---- */
+.form{border-top:2px solid var(--ink);padding-top:1.5rem}
+.form__hd{font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--brack);margin:0 0 1.4rem;display:flex;justify-content:space-between;gap:1rem}
+.field{margin-bottom:1.1rem}
+.field > label{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--brack);margin-bottom:.42rem}
+.field > label .req{color:var(--pollen)}
+.field input,.field select,.field textarea{
+  width:100%;font-family:var(--body);font-size:.95rem;color:var(--ink);
+  background:rgba(255,255,255,.55);border:1px solid var(--rule);border-radius:0;
+  padding:.62em .75em;transition:border-color .16s,background .16s;
+}
+.field textarea{min-height:88px;resize:vertical;line-height:1.55}
+.field select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--brack) 50%),
+  linear-gradient(135deg,var(--brack) 50%,transparent 50%);
+  background-position:calc(100% - 15px) center,calc(100% - 10px) center;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:2.2em}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--brack)}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--pine);background:#fff;box-shadow:inset 0 -2px 0 var(--pollen)}
+.form__row{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+@media(max-width:560px){.form__row{grid-template-columns:1fr}}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.form__submit{margin-top:.4rem;display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap}
+.form__alt{font-family:var(--mono);font-size:.68rem;color:var(--brack)}
+.form__alt a{color:var(--pine)}
+.form__status{
+  font-family:var(--mono);font-size:.72rem;line-height:1.65;margin-top:1.1rem;
+  padding:.85rem 1rem;border-left:2px solid var(--brack);background:rgba(92,122,115,.09);display:none;
+}
+.form__status.show{display:block}
+.form__status.ok{border-left-color:var(--pine);background:rgba(47,74,60,.1)}
+.form__status.bad{border-left-color:#a3441f;background:rgba(163,68,31,.09);color:#7d3417}
+button.btn{cursor:pointer;font-family:var(--mono)}
+button.btn[disabled]{opacity:.5;cursor:wait}
+
 .foot{border-top:1px solid var(--rule);padding-block:2.2rem;
   font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;color:var(--brack)}
 .foot__in{display:flex;justify-content:space-between;gap:1.4rem;flex-wrap:wrap}
@@ -732,10 +770,106 @@ h1 em{font-style:normal;font-variation-settings:"SOFT" 90,"WONK" 1;color:var(--p
         close at the end of the preceding January.
       </p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:.7rem;align-items:flex-start">
-      <a class="btn btn--solid" href="mailto:eugenep@lirestore.com?subject=Site%20assessment%20request">
-        Request an assessment <span class="btn__arrow">→</span></a>
-      <a class="btn" href="mailto:eugenep@lirestore.com?subject=Swarm%20call">Report a swarm</a>
+    <div>
+      <form class="form" id="inquiry" method="POST"
+            action="https://api.web3forms.com/submit" novalidate>
+
+        <!-- ▼▼▼ PASTE YOUR WEB3FORMS ACCESS KEY BETWEEN THE QUOTES ▼▼▼ -->
+        <input type="hidden" name="access_key" value="PASTE_YOUR_ACCESS_KEY_HERE">
+        <!-- ▲▲▲ that is the only edit needed to turn the form on ▲▲▲ -->
+
+        <p class="form__hd"><span>Assessment request</span><span>No cost · no obligation</span></p>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="f-name">Your name <span class="req">*</span></label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Email <span class="req">*</span></label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="f-phone">Phone</label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="f-town">Town <span class="req">*</span></label>
+            <input id="f-town" name="town" type="text" placeholder="Water Mill, Cutchogue…" required>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label for="f-type">Property type <span class="req">*</span></label>
+            <select id="f-type" name="property_type" required>
+              <option value="">Select one</option>
+              <option>Private estate or residence</option>
+              <option>Vineyard or working farm</option>
+              <option>Resort, inn, or venue</option>
+              <option>Corporate or institutional grounds</option>
+              <option>Golf or country club</option>
+              <option>Municipal, preserve, or land trust</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-acres">Grounds, approx.</label>
+            <select id="f-acres" name="acreage">
+              <option value="">Select one</option>
+              <option>Under 1 acre</option>
+              <option>1–3 acres</option>
+              <option>3–10 acres</option>
+              <option>10–40 acres</option>
+              <option>Over 40 acres</option>
+              <option>Not sure</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-program">Program you're considering</label>
+          <select id="f-program" name="program">
+            <option>Not sure yet — recommend one</option>
+            <option>Estate Essential — $2,750/yr</option>
+            <option>Estate Signature — $4,200/yr</option>
+            <option>Vineyard &amp; Farm Partner — $4,900/yr</option>
+            <option>Property &amp; Workplace — $6,900/yr</option>
+            <option>Hospitality Program — from $14,000/yr</option>
+            <option>Project work only (habitat, baseline, removal)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="f-notes">Anything we should know before we walk it?</label>
+          <textarea id="f-notes" name="notes"
+            placeholder="Existing gardens, spray program, allergies in the household, a target date…"></textarea>
+        </div>
+
+        <div class="hp" aria-hidden="true">
+          <label for="f-co">Company</label>
+          <input id="f-co" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+          <input name="botcheck" type="checkbox" tabindex="-1" style="display:none">
+        </div>
+
+        <div class="form__submit">
+          <button class="btn btn--solid" type="submit">
+            Send request <span class="btn__arrow">→</span></button>
+          <button class="btn" type="button" id="f-compose">Compose in my email app</button>
+        </div>
+
+        <p class="form__status" id="f-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="form__alt" style="margin-top:1.6rem;padding-top:1.1rem;border-top:1px solid var(--rule)">
+        Bees in a wall or a swarm on the property?
+        <a href="mailto:eugenep@lirestore.com?subject=Swarm%20call">Report a swarm</a> —
+        we answer these first. Please don't spray; Suffolk County code requires a beekeeper be
+        contacted before any lethal treatment.
+      </p>
     </div>
   </div>
 </section>
@@ -796,6 +930,128 @@ h1 em{font-style:normal;font-variation-settings:"SOFT" 90,"WONK" 1;color:var(--p
 
   window.addEventListener('hashchange', function(){ revealTarget(location.hash); });
   if(location.hash) revealTarget(location.hash);
+
+  /* ---- inquiry form ---- */
+  var INBOX = 'eugenep@lirestore.com';
+  var form  = document.getElementById('inquiry');
+
+  if(form){
+    var status  = document.getElementById('f-status');
+    var btn     = form.querySelector('button[type=submit]');
+    var compose = document.getElementById('f-compose');
+
+    function say(msg, kind){
+      status.textContent = msg;
+      status.className = 'form__status show ' + (kind || '');
+    }
+
+    function val(n){
+      var el = form.elements[n];
+      return el && el.value ? el.value.trim() : '';
+    }
+
+    function validate(){
+      var bad = form.querySelector(':invalid');
+      if(!bad) return true;
+      var label = form.querySelector('label[for="' + bad.id + '"]');
+      var which = label ? label.textContent.replace('*','').trim().toLowerCase() : 'a required field';
+      say('Add your ' + which + ', then try again.', 'bad');
+      bad.focus();
+      return false;
+    }
+
+    /* One subject line, used by both the relay and the email path */
+    function subjectLine(){
+      var isSwarm = /swarm|in the wall|in a wall|hive in/i.test(val('notes'));
+      return isSwarm
+        ? 'Swarm call — ' + (val('town') || 'Suffolk County')
+        : 'Assessment request — ' + (val('property_type') || 'property') + ', ' + (val('town') || 'Suffolk County');
+    }
+
+    /* Compose a complete, readable email addressed to Eugene. This is the
+       no-server path: the visitor's own mail app opens pre-filled. */
+    function buildMailto(){
+      var subject = subjectLine();
+      var L = [];
+      L.push('ASSESSMENT REQUEST via lirestore.com');
+      L.push('');
+      L.push('Name          ' + val('name'));
+      L.push('Email         ' + val('email'));
+      if(val('phone')) L.push('Phone         ' + val('phone'));
+      L.push('Town          ' + val('town'));
+      L.push('');
+      L.push('Property type ' + val('property_type'));
+      if(val('acreage')) L.push('Grounds       ' + val('acreage'));
+      L.push('Program       ' + val('program'));
+      if(val('notes')){
+        L.push('');
+        L.push('Notes');
+        L.push(val('notes'));
+      }
+      L.push('');
+      L.push('---');
+      L.push('Submitted ' + new Date().toLocaleString());
+
+      var body = L.join('\r\n');
+      // keep well inside practical mailto length limits
+      if(body.length > 1800) body = body.slice(0, 1795) + '\r\n[…]';
+
+      return 'mailto:' + INBOX +
+             '?subject=' + encodeURIComponent(subject) +
+             '&body='    + encodeURIComponent(body);
+    }
+
+    function openMail(){
+      if(!validate()) return;
+      window.location.href = buildMailto();
+      say('Your email app is opening with the request filled in. Press send there and it comes straight to ' +
+          INBOX + '. If nothing opened, your browser has no mail app set — email us directly instead.', 'ok');
+    }
+
+    if(compose) compose.addEventListener('click', openMail);
+
+    form.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      if(!validate()) return;
+
+      var key = form.elements['access_key'] ? form.elements['access_key'].value : '';
+
+      // No access key yet: compose the email directly instead of failing silently.
+      if(!key || key.indexOf('PASTE_YOUR') !== -1){
+        openMail();
+        return;
+      }
+
+      btn.disabled = true;
+      say('Sending…');
+
+      // Build the payload, and give it the same useful subject line as the email path
+      var payload = {};
+      new FormData(form).forEach(function(v,k){ payload[k] = v; });
+      payload.subject   = subjectLine();
+      payload.from_name = 'LIRestore website';
+
+      fetch(form.action, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify(payload)
+      }).then(function(r){
+        return r.json().catch(function(){ return {}; });
+      }).then(function(res){
+        if(res && res.success){
+          form.reset();
+          say('Request received. Eugene will reply within two business days to arrange a walk-through.', 'ok');
+        } else {
+          say((res && res.message ? res.message + ' ' : '') +
+              'Use "Compose in my email app" instead, or write to ' + INBOX + '.', 'bad');
+        }
+      }).catch(function(){
+        say('That didn\'t go through — you may be offline. Use "Compose in my email app" instead, or write to ' + INBOX + '.', 'bad');
+      }).then(function(){
+        btn.disabled = false;
+      });
+    });
+  }
 })();
 </script>
 </body>
